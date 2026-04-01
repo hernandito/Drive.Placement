@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.04.01a">
+<!ENTITY version "2026.04.01b">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
@@ -16,8 +16,14 @@
         min="6.12.0">
 
 <CHANGES>
+
+###2026.04.01b
+- Add custom icon, and unRAID's Plugin's page page description.
+
 ###2026.04.01a
 - Initial release: Interactive drag-and-drop drive placement dashboard.
+
+
 </CHANGES>
 
 <FILE Name="&plugdir;/DrivePlacement.page">
@@ -55,6 +61,17 @@
 <FILE Name="&plugdir;/icons/usb.png">
   <URL>https://raw.githubusercontent.com/&github;/main/icons/usb.png</URL>
 </FILE>
+
+
+<FILE Name="&plugdir;/README.md">
+  <URL>https://raw.githubusercontent.com/&github;/main/description.txt</URL>
+</FILE>
+
+<FILE Name="&plugdir;/&name;.png">
+  <URL>https://raw.githubusercontent.com/&github;/main/icon.png</URL>
+</FILE>
+
+
 
 <FILE Run="/bin/bash">
 <INLINE>
