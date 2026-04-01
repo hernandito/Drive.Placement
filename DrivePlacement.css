@@ -1,0 +1,384 @@
+.dp-wrapper {
+    padding: 20px;
+    background: linear-gradient(135deg, #ebecec 0%, #f8fafc 100%);
+    min-height: 800px;
+    color: #1e293b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    border-radius: 12px;
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgb(209, 209, 209);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+.dp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px 10px;
+    margin-bottom: 10px;
+}
+
+.dp-title { margin: 0; font-size: 1.8rem; font-weight: 800; color:#5a5a5a; }
+.dp-subtitle { margin: 5px 0 0 0; font-size: 1rem; color: #64748b; }
+
+.dp-controls { display: flex; gap: 10px; }
+
+.dp-btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.dp-btn-primary { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+.dp-btn-primary:hover { background: #2563eb; }
+.dp-btn-secondary { background: white; color: #334155; border: 1px solid #cbd5e1; }
+.dp-btn-secondary:hover { background: #f1f5f9; }
+
+.dp-btn-success { background: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+.dp-btn-success:hover { background: #059669; }
+.dp-btn-success:disabled { opacity: 0.7; cursor: not-allowed; }
+.success-flash { background: #047857 !important; transform: scale(1.05); }
+
+.dp-unplaced-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 14px;
+    margin-bottom: 10px;
+    align-items: start;
+}
+
+/* === ROCK-SOLID LAYOUT CONTAINER - NO CLIPPING === */
+.dp-layout-container {
+    width: 100%;
+    display: block;
+}
+
+.dp-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #334155;
+    text-align: center; /* Centers the title text */
+    margin-top: 0;
+    /* Removed the margin-left so it sits perfectly perfectly in the middle */
+}
+
+.dp-layout-grid {
+    display: flex;
+    justify-content: center; /* Pushes all columns to the exact center of the screen */
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    padding-left: 10px; 
+    padding-right: 10px; 
+    min-height: 400px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dp-column {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    background: rgba(241, 245, 249, 0.6);
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+}
+
+.dp-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    padding-bottom: 1px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.dp-column-title {
+    flex-grow: 1;
+    margin-right: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    color: #0f172a;
+    transition: all 0.2s;
+	margin-right: 10px !important;
+    margin-left: 10px !important;
+}
+.dp-column-title:focus { outline: none; border-bottom: 2px solid #3b82f6; }
+
+.dp-column-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0; 
+	margin-top: 2px;
+}
+
+.dp-col-btn {
+    width: 50px !important;     
+    height: 22px !important;    
+    min-width: 50px !important; 
+    padding: 0 !important;      
+    margin: 0 !important;       
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.dp-add-row:hover { background: #e0f2fe; color: #0284c7; border-color: #7dd3fc; }
+.dp-del-col:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+
+.dp-slot {
+    height: 140px; /* NEW: Locks the vertical space to ensure perfect horizontal alignment */
+    margin-bottom: 6px; /* NEW: Applies the gap uniformly to ALL slots, empty or full */
+    border: 2px dashed #94a3b8; 
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    transition: all 0.2s;
+    background: rgba(255, 255, 255, 0.4);
+    position: relative;
+}
+
+.dp-slot:has(.dp-card) {
+    display: block; 
+    border-color: transparent;
+    background: transparent;
+    /* margin-bottom was moved to the parent .dp-slot so empty slots get the gap too */
+}
+
+.dp-slot:not(:has(.dp-card))::after {
+    content: "Empty Slot";
+    color: #64748b;
+    text-align: center;
+}
+
+.dp-slot.drag-over { 
+    background: rgba(59, 130, 246, 0.15) !important; 
+    border: 3px dashed #3b82f6 !important; 
+    transform: scale(1.05); 
+    min-height: 180px; 
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+    z-index: 10;
+}
+
+.dp-del-empty-slot {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important; 
+    padding: 0 !important;      
+    margin: 0 !important;
+    border-radius: 50%;
+    background: #ef4444;
+    color: white;
+    border: none;
+    opacity: 0.5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 5;
+}
+.dp-del-empty-slot:hover { opacity: 1; transform: scale(1.1); }
+.dp-slot:has(.dp-card) .dp-del-empty-slot { display: none; }
+
+
+.dp-card {
+    height: 100%; /* NEW: Forces the card to perfectly fill the locked 160px slot */
+    padding: 10px;
+    cursor: grab;
+    position: relative;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    border: 1px solid #cacaca;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.dp-card:active { cursor: grabbing; }
+.locked .dp-card, .locked .dp-column-header { cursor: default; }
+
+.dp-drive-name {
+    font-size: 1.4rem; 
+    font-weight: 800; 
+    color: #626262; 
+    margin-bottom: 4px; 
+    padding-right: 60px; 
+}
+.dp-drive-model { font-size: 12px; color: #475569; margin-bottom: 2px; }
+.dp-drive-serial { font-size: 12px; font-family: monospace; color: #5e5e5e; margin-bottom: 6px; }
+.dp-drive-size { font-size: 2.0rem; font-weight: 700; color: #059669; }
+
+.dp-serial-large {
+    font-size: 2.0rem;
+    font-weight: 900;
+    color: #bf0000;
+    text-align: center;
+    letter-spacing: 4px;
+    font-family: monospace;
+    background: #f0f0f0;
+    border-radius: 6px;
+    padding: 0px 0;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    align-content: center;
+    border: 1px solid #d4d4d4;
+	width: 70%;
+}
+
+.dp-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.badge-parity { background: #c40000; color: white; }
+.badge-data { background: #6aaf6e; color: white; }
+.badge-cache { background: #e59000; color: white; }
+.badge-unassigned { background: #7f7f7f; color: white; }
+
+.dp-media-icon {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #475569;
+    font-weight: 600;
+}
+
+.dp-action-group {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+}
+
+.dp-action-btn {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important; 
+    max-width: 28px !important;
+    padding: 0 !important;      
+    margin: 0 !important;
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+    font-weight: bold;
+    box-sizing: border-box;
+    line-height: 1; 
+}
+
+.dp-action-btn:hover { background: #e2e8f0; }
+.dp-btn-delete:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+
+#dp-unplaced-pool .dp-btn-delete {
+    display: none;
+}
+
+.dp-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+}
+.dp-edit-form input, .dp-edit-form select {
+    padding: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* === LOCKED MODE UI === */
+.locked #dp-add-column, 
+.locked #dp-save-layout,
+.locked .dp-add-row,
+.locked .dp-del-col,
+.locked .dp-action-group,
+.locked .dp-del-empty-slot,
+.locked .dp-column-actions { 
+    display: none; 
+}
+
+/* Keep vertical space for empty slots in locked mode, but remove the frame and text */
+.locked .dp-slot:not(:has(.dp-card)) { 
+    border-color: transparent; 
+    background: transparent; 
+}
+
+.locked .dp-slot:not(:has(.dp-card))::after { 
+    display: none; 
+}
+
+.locked .dp-column-title {
+    pointer-events: none; 
+    border-bottom: none;
+    width: 100%;
+    text-align: center;
+    font-size: 1.4rem;
+    color: #334155;
+    margin-right: 0;
+}
+
+.locked .dp-column-header {
+    justify-content: left;
+    padding-bottom: 0px;
+    background-color: #fffae9;
+    border-radius: 5px;
+    border: 1px solid #d4d4d4;
+}
+
+.locked .dp-column {
+    border: 1px solid #cbd5e1; 
+    background: transparent;
+}
+
+.dp-drive-size img {
+    height: 32px !important;
+}

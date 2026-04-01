@@ -1,0 +1,9 @@
+Menu="Utilities"
+Title="Drive Placement"
+Icon="server"
+---
+<?php
+// This includes the actual logic and UI for our plugin
+include("/usr/local/emhttp/plugins/driveplacement/DrivePlacement.php");
+?>
+

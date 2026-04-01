@@ -1,0 +1,102 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name "driveplacement">
+<!ENTITY author "hernandito">
+<!ENTITY version "2026.04.01a">
+<!ENTITY github "hernandito/Drive.Placement">
+<!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
+<!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
+]>
+<PLUGIN name="&name;"
+        author="&author;"
+        version="&version;"
+        launch="/Settings/DrivePlacement"
+        pluginURL="&pluginURL;"
+        support="https://github.com/&github;"
+        min="6.12.0">
+
+<CHANGES>
+###2026.04.01a
+- Initial release: Interactive drag-and-drop drive placement dashboard.
+</CHANGES>
+
+<FILE Name="&plugdir;/DrivePlacement.page">
+  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.page</URL>
+</FILE>
+
+<FILE Name="&plugdir;/DrivePlacement.php">
+  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.php</URL>
+</FILE>
+
+<FILE Name="&plugdir;/DrivePlacement.css">
+  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.css</URL>
+</FILE>
+
+<FILE Name="&plugdir;/DrivePlacement.js">
+  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.js</URL>
+</FILE>
+
+<FILE Name="&plugdir;/save.php">
+  <URL>https://raw.githubusercontent.com/&github;/main/save.php</URL>
+</FILE>
+
+<FILE Name="&plugdir;/icons/hdd.png">
+  <URL>https://raw.githubusercontent.com/&github;/main/icons/hdd.png</URL>
+</FILE>
+
+<FILE Name="&plugdir;/icons/ssd.png">
+  <URL>https://raw.githubusercontent.com/&github;/main/icons/ssd.png</URL>
+</FILE>
+
+<FILE Name="&plugdir;/icons/nvme.png">
+  <URL>https://raw.githubusercontent.com/&github;/main/icons/nvme.png</URL>
+</FILE>
+
+<FILE Name="&plugdir;/icons/usb.png">
+  <URL>https://raw.githubusercontent.com/&github;/main/icons/usb.png</URL>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+<![CDATA[
+NAME="driveplacement"
+PLUGDIR="/usr/local/emhttp/plugins/$NAME"
+CONF="/boot/config/plugins/$NAME"
+
+# Create directories
+mkdir -p "$PLUGDIR/icons"
+mkdir -p "$CONF"
+
+# Set permissions
+chown -R root:root "$PLUGDIR"
+chmod -R 755 "$PLUGDIR"
+
+echo ""
+echo "----------------------------------------------------"
+echo " Drive Placement has been installed."
+echo " Version: 2026.04.01a"
+echo "----------------------------------------------------"
+echo ""
+]]>
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+<![CDATA[
+NAME="driveplacement"
+PLUGDIR="/usr/local/emhttp/plugins/$NAME"
+
+# Remove plugin files but leave the config directory intact to save user layouts
+rm -rf "$PLUGDIR"
+
+echo ""
+echo "----------------------------------------------------------------------------"
+echo " Drive Placement has been uninstalled."
+echo " Persistent layout in /boot/config/plugins/driveplacement was preserved."
+echo "----------------------------------------------------------------------------"
+echo ""
+]]>
+</INLINE>
+</FILE>
+</PLUGIN>
