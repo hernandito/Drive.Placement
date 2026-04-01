@@ -1,6 +1,6 @@
 Menu="Utilities"
 Title="Drive Placement"
-Icon="server"
+Icon="driveplacement.png"
 Type="xmenu"
 Tabs="true"
 Markdown="false"
