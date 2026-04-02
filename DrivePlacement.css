@@ -72,6 +72,7 @@
     text-align: center; /* Centers the title text */
     margin-top: 0;
     /* Removed the margin-left so it sits perfectly perfectly in the middle */
+	display: none;
 }
 
 .dp-layout-grid {
