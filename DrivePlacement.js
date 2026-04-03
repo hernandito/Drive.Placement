@@ -37,7 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.querySelectorAll('.dp-card').forEach(card => {
                     layout.metadata[card.dataset.id] = {
                         name: card.dataset.customName || "",
-                        mediaType: card.dataset.mediaType || "default"
+                        mediaType: card.dataset.mediaType || "default",
+                        notes: card.dataset.notes || ""
                     };
                 });
 
@@ -96,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const meta = customMeta[drive.id] || {};
             card.dataset.customName = meta.name || drive.name || "Drive";
             card.dataset.mediaType = meta.mediaType || drive.mediaType || "default";
+            card.dataset.notes = meta.notes || ""; 
             
             renderCardContent(card, drive);
             setupCardDrag(card);
@@ -114,25 +116,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 typeLabel = 'UD'; 
             }
             
-            const displayName = card.dataset.customName || "";
+
+			let displayName = card.dataset.customName || "";
+			displayName = displayName.replace(/^(disk)(\d+)$/i, 'Disk $2'); // Auto-formats "disk1" to "Disk 1"
+
             const mediaType = card.dataset.mediaType || "default";
             const iconHtml = mediaIcons[mediaType] || mediaIcons['default'];
             const rawSerial = card.dataset.rawSerial || "";
             const last4 = rawSerial.length >= 4 ? rawSerial.slice(-4) : rawSerial;
 
+            const notesText = card.dataset.notes || "";
+            const notesHtml = notesText ? `<div class="dp-drive-notes">${notesText}</div>` : "";
+
+            // --- HTML UPDATED TO GROUP SERIAL AND BUTTONS ---
             card.innerHTML = `
                 <div class="dp-badge ${badgeClass}">${typeLabel}</div>
-                <div class="dp-drive-name">${displayName.toUpperCase()}</div>
-                <div class="dp-drive-size">${iconHtml} ${drive.size || "Unknown"}</div>
+				
+                <div class="dp-drive-name">${displayName}</div>
+                
+				
+				<div class="dp-drive-size">${iconHtml} ${drive.size || "Unknown"}</div>
 
                 <div class="dp-drive-model">${drive.model || "Unknown"}</div>
                 <div class="dp-drive-serial">${rawSerial}</div>
-                <div class="dp-serial-large">${last4.toUpperCase()}</div>
-           
-                <div class="dp-action-group">
-                    <button class="dp-action-btn dp-btn-delete" title="Remove Slot & Return Drive">X</button>
-                    <button class="dp-action-btn dp-btn-edit" title="Edit Drive">✏️</button>
+                
+                <div class="dp-serial-row">
+                    <div class="dp-serial-large">${last4.toUpperCase()}</div>
+                    <div class="dp-action-group">
+                        <button class="dp-action-btn dp-btn-delete" title="Remove Slot & Return Drive">X</button>
+                        <button class="dp-action-btn dp-btn-edit" title="Edit Drive">✏️</button>
+                    </div>
                 </div>
+                
+                ${notesHtml}
             `;
 
             card.querySelector('.dp-btn-edit').addEventListener('click', (e) => {
@@ -154,11 +170,13 @@ document.addEventListener("DOMContentLoaded", () => {
         function showEditForm(card, drive) {
             const currentName = card.dataset.customName;
             const currentType = card.dataset.mediaType;
+            const currentNotes = card.dataset.notes || ""; 
 
             card.innerHTML = `
                 <div class="dp-edit-form">
                     <label style="font-size:0.8rem; font-weight:bold;">Custom Name:</label>
                     <input type="text" class="dp-edit-name" value="${currentName}">
+                    
                     <label style="font-size:0.8rem; font-weight:bold; margin-top:5px;">Media Type:</label>
                     <select class="dp-edit-type">
                         <option value="default" ${currentType === 'default' ? 'selected' : ''}>Default OS Detected</option>
@@ -167,6 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         <option value="nvme" ${currentType === 'nvme' ? 'selected' : ''}>NVMe</option>
                         <option value="usb" ${currentType === 'usb' ? 'selected' : ''}>USB Flash</option>
                     </select>
+
+                    <label style="font-size:0.8rem; font-weight:bold; margin-top:5px;">Notes:</label>
+                    <input type="text" class="dp-edit-notes" value="${currentNotes}" placeholder="Optional notes...">
+
                     <button class="dp-btn dp-btn-primary dp-save-edit" style="margin-top:10px; padding: 6px;">Update Card</button>
                 </div>
             `;
@@ -174,11 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
             card.querySelector('.dp-save-edit').addEventListener('click', () => {
                 card.dataset.customName = card.querySelector('.dp-edit-name').value;
                 card.dataset.mediaType = card.querySelector('.dp-edit-type').value;
+                card.dataset.notes = card.querySelector('.dp-edit-notes').value; 
                 renderCardContent(card, drive); 
             });
         }
 
-        // --- UPDATED COLUMN DOM CREATION ---
         function createColumnDOM(titleText) {
             const col = document.createElement('div');
             col.className = 'dp-column';

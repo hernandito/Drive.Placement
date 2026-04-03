@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Containers>
+<Plugin>True</Plugin>
+<PluginURL>https://raw.githubusercontent.com/hernandito/quick.favorites/main/quick.favorites.plg</PluginURL>
+<PluginAuthor>hernandito</PluginAuthor>
+<Beta>False</Beta>
+<Category>Tools:System</Category>
+<Name>Quick.Favorites</Name>
+<Description>
+Quick Favorites is custom favorites menu for the Unraid header. It brings up a quick pop-up to directly navigate where you want to go. Easily navigate to pages, Docker containers, external links, and User Scripts with live previews and comprehensive icon support.</Description>
+<Support>https://forums.unraid.net/topic/197973-plugin-quick-favorites-custom-favorites-menu-pop-up/</Support>
+<IconFA>star</IconFA>
+<DonateImg></DonateImg>
+<DonateLink></DonateLink>
+<Screenshot>https://github.com/hernandito/quick.favorites/blob/main/screenshots/menu-open-cropped.png?raw=true</Screenshot>
+</Containers>
