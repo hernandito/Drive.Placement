@@ -41,8 +41,15 @@
 
 .dp-btn-primary { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
 .dp-btn-primary:hover { background: #2563eb; }
-.dp-btn-secondary { background: white; color: #334155; border: 1px solid #cbd5e1; }
+.dp-btn-secondary { color: #334155; }
 .dp-btn-secondary:hover { background: #f1f5f9; }
+
+.dp-compact-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
 
 .dp-btn-success { background: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
 .dp-btn-success:hover { background: #059669; }
@@ -151,9 +158,8 @@
 .dp-add-row:hover { background: #e0f2fe; color: #0284c7; border-color: #7dd3fc; }
 .dp-del-col:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
 
-/* === INCREASED BY 5PX FOR NOTES === */
 .dp-slot {
-    height: 160px; 
+    height: 165px; 
     margin-bottom: 6px; 
     border: 2px dashed #94a3b8; 
     border-radius: 10px;
@@ -223,11 +229,11 @@
     width: 100%;
     box-sizing: border-box;
     z-index: 1;
-    overflow: hidden; /* Restored: This will magically slice off any notes text that exceeds the card bounds */
+    overflow: hidden;
 }
 
 .dp-card:has(.dp-edit-form) {
-    overflow: visible; /* Gives the Edit Dropdown permission to float out of the card */
+    overflow: visible; 
     z-index: 50; 
 }
 
@@ -235,7 +241,6 @@
 .locked .dp-card, .locked .dp-column-header { cursor: default; border-left: 7px solid #98cde8; }
 
 .dp-drive-name {
-	text-transform: capitalize; /* Adds automatic Title Case */
     font-size: 1.4rem; 
     font-weight: 800; 
     color: #626262; 
@@ -246,16 +251,16 @@
 .dp-drive-serial { font-size: 12px; font-family: monospace; color: #5e5e5e; margin-bottom: 1px; }
 .dp-drive-size { font-size: 2.0rem; font-weight: 700; color: #059669; }
 
-/* === NEW: Groups the Serial and Buttons horizontally === */
 .dp-serial-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    margin-top: 5px;
 }
 
 .dp-serial-large {
-    flex-grow: 1; /* Scales perfectly depending on if the buttons are visible or hidden! */
+    flex-grow: 1; 
     font-size: 2.0rem;
     font-weight: 900;
     color: #bf0000;
@@ -270,7 +275,6 @@
     border: 1px solid #d4d4d4;
 }
 
-/* === UPDATED: Uses 100% width and removes top margin === */
 .dp-drive-notes {
     font-size: 11px;
     color: #00698c;
@@ -308,10 +312,9 @@
 .dp-action-group {
     display: flex !important;
     gap: 6px !important;
-    flex-shrink: 0; /* Prevents buttons from squishing */
+    flex-shrink: 0; 
 }
 
-/* === ARMORED: Protects compact formatting from unRAID UI Overrides === */
 .dp-action-btn {
     width: 28px !important;
     height: 28px !important;
@@ -320,7 +323,7 @@
     padding: 0 !important;      
     margin: 0 !important;
     background: #f8fafc !important;
-    color: #475569 !important;
+    color: #9b9b9b  !important;
     border: 1px solid #cbd5e1 !important;
     border-radius: 6px !important;
     cursor: pointer !important;
@@ -334,8 +337,8 @@
     line-height: 1 !important; 
 }
 
-.dp-action-btn:hover { background: #e2e8f0 !important; }
-.dp-btn-delete:hover { background: #fee2e2 !important; color: #ef4444 !important; border-color: #fca5a5 !important; }
+.dp-action-btn:hover { background: #b30000 !important; }
+.dp-btn-delete:hover { background: #b30000 !important; color: #ffffff !important; border-color: #b30000 !important; }
 
 #dp-unplaced-pool .dp-btn-delete {
     display: none !important;
@@ -377,7 +380,6 @@
     display: none !important; 
 }
 
-/* Keep vertical space for empty slots in locked mode, but remove the frame and text */
 .locked .dp-slot:not(:has(.dp-card)) { 
     border-color: transparent; 
     background: transparent; 
@@ -413,3 +415,81 @@
 .dp-drive-size img {
     height: 32px !important;
 }
+
+/* =========================================
+   === COMPACT MODE OVERRIDES ===
+   ========================================= */
+.compact-mode .dp-drive-model,
+.compact-mode .dp-drive-serial,
+.compact-mode .dp-drive-notes {
+    display: none !important;
+}
+
+/* Because the elements are on the same line, the card can be super slim! */
+.compact-mode .dp-slot {
+    height: 70px !important; 
+}
+
+/* Turns the card into a flex wrapper to put elements side-by-side */
+.compact-mode .dp-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+	padding-top: 6px;
+	padding-bottom: 0px;
+}
+
+/* Forces the Drive Name to take up the entire top row */
+.compact-mode .dp-drive-name {
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+/* Scales down the Size text and aligns it vertically */
+.compact-mode .dp-drive-size {
+    font-size: 1.4rem !important; 
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+.compact-mode .dp-drive-size img {
+    height: 22px !important; 
+    margin-right: 4px;
+}
+
+/* Puts the Serial Row on the same line as Size and takes the remaining space */
+.compact-mode .dp-serial-row {
+    flex-grow: 1;
+    margin-top: 0 !important;
+    margin-left: 10px; /* Gap between Size and Serial Box */
+}
+
+/* Scales down the large serial box so it fits cleanly in the narrow space */
+.compact-mode .dp-serial-large {
+    font-size: 1.8rem !important; 
+    padding: 2px 0 !important;
+    letter-spacing: 2px !important;
+}
+
+.compact-mode .dp-drive-size img {
+  height: 28px !important;
+}
+
+.compact-mode .dp-drive-size {
+  font-size: 1.70rem;
+
+}
+
+.compact-mode .dp-badge {
+  top: 6px;
+  padding: 5px 8px;
+  border-radius: 5px;  
+  
+}
+
+.compact-mode #dp-unplaced-pool .dp-card {
+    padding-bottom: 8px;
+
+}
+

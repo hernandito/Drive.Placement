@@ -14,6 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
         const customMeta = (savedLayout && savedLayout.metadata) ? savedLayout.metadata : {};
+        
+        // === NEW: Initialize and Inject Compact Mode ===
+        let isCompact = (savedLayout && savedLayout.settings && savedLayout.settings.compactMode) === true;
+        document.body.classList.toggle('compact-mode', isCompact);
+
+        const controlsDiv = document.querySelector('.dp-controls');
+        const compactLabel = document.createElement('label');
+        compactLabel.className = 'dp-btn dp-btn-secondary dp-compact-label';
+        compactLabel.innerHTML = `<input type="checkbox" id="dp-compact-toggle" style="margin-right: 5px; transform: scale(1.2);" ${isCompact ? 'checked' : ''}> Compact`;
+        controlsDiv.insertBefore(compactLabel, toggleBtn);
+
+        document.getElementById('dp-compact-toggle').addEventListener('change', (e) => {
+            isCompact = e.target.checked;
+            document.body.classList.toggle('compact-mode', isCompact);
+        });
 
         saveBtn.addEventListener('click', () => {
             if (isLocked) return; 
@@ -22,7 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
             saveBtn.disabled = true;
 
             try {
-                const layout = { columns: [], metadata: {} };
+                // === NEW: Saves the Compact Mode state into a settings object ===
+                const layout = { columns: [], metadata: {}, settings: { compactMode: isCompact } };
+                
                 document.querySelectorAll('.dp-column').forEach(col => {
                     const titleInput = col.querySelector('.dp-column-title');
                     const title = titleInput ? titleInput.value : "Column";
@@ -116,9 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 typeLabel = 'UD'; 
             }
             
-
-			let displayName = card.dataset.customName || "";
-			displayName = displayName.replace(/^(disk)(\d+)$/i, 'Disk $2'); // Auto-formats "disk1" to "Disk 1"
+            let displayName = card.dataset.customName || "";
+            displayName = displayName.replace(/^(disk)(\d+)$/i, 'Disk $2');
 
             const mediaType = card.dataset.mediaType || "default";
             const iconHtml = mediaIcons[mediaType] || mediaIcons['default'];
@@ -128,14 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const notesText = card.dataset.notes || "";
             const notesHtml = notesText ? `<div class="dp-drive-notes">${notesText}</div>` : "";
 
-            // --- HTML UPDATED TO GROUP SERIAL AND BUTTONS ---
             card.innerHTML = `
                 <div class="dp-badge ${badgeClass}">${typeLabel}</div>
-				
                 <div class="dp-drive-name">${displayName}</div>
-                
-				
-				<div class="dp-drive-size">${iconHtml} ${drive.size || "Unknown"}</div>
+                <div class="dp-drive-size">${iconHtml} ${drive.size || "Unknown"}</div>
 
                 <div class="dp-drive-model">${drive.model || "Unknown"}</div>
                 <div class="dp-drive-serial">${rawSerial}</div>
