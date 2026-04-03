@@ -5,6 +5,7 @@
     color: #1e293b;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     border-radius: 12px;
+	padding-top: 5px;
 }
 
 .glass-panel {
@@ -25,7 +26,7 @@
 }
 
 .dp-title { margin: 0; font-size: 1.8rem; font-weight: 800; color:#5a5a5a; }
-.dp-subtitle { margin: 5px 0 0 0; font-size: 1rem; color: #64748b; }
+.dp-subtitle { margin: 0 0 0 0; font-size: 1rem; color: #64748b; }
 
 .dp-controls { display: flex; gap: 10px; }
 
@@ -493,3 +494,8 @@
 
 }
 
+.compact-mode .dp-card  {
+
+  border-left: 6px solid #cacaca;
+  
+}
