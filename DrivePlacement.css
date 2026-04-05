@@ -5,7 +5,7 @@
     color: #1e293b;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     border-radius: 12px;
-	padding-top: 5px;
+    padding-top: 5px;
 }
 
 .glass-panel {
@@ -230,9 +230,10 @@
     width: 100%;
     box-sizing: border-box;
     z-index: 1;
-    overflow: hidden;
+    overflow: hidden; 
 }
 
+.dp-card:hover,
 .dp-card:has(.dp-edit-form) {
     overflow: visible; 
     z-index: 50; 
@@ -276,6 +277,7 @@
     border: 1px solid #d4d4d4;
 }
 
+/* === STANDARD MODE: Displays native 2-line notes === */
 .dp-drive-notes {
     font-size: 11px;
     color: #00698c;
@@ -288,10 +290,22 @@
     overflow: hidden;
 }
 
-.dp-badge {
+/* === STANDARD MODE: Hides Tooltip Icon by default === */
+.dp-notes-wrapper {
+    display: none; 
+}
+
+.dp-badge-container {
     position: absolute;
     top: 10px;
     right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 20; 
+}
+
+.dp-badge {
     padding: 6px 8px;
     border-radius: 5px;
     font-size: 0.75rem;
@@ -302,6 +316,56 @@
 .badge-data { background: #6aaf6e; color: white; }
 .badge-cache { background: #e59000; color: white; }
 .badge-unassigned { background: #7f7f7f; color: white; }
+
+/* === TOOLTIP POP-UP STYLING === */
+.dp-notes-icon {
+	font-size: 18px;
+	color: #969696;
+    transition: color 0.2s;
+}
+.dp-notes-icon:hover {
+    color: #004d66;
+}
+
+.dp-notes-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: 100%; 
+    right: 0; 
+    margin-top: 8px;
+    width: max-content;
+    max-width: 220px; 
+    background-color: #4d4d4d;
+    color: #ffffff;
+    text-align: left;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: normal;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.85);
+    z-index: 100;
+    transition: opacity 0.2s, visibility 0.2s;
+    pointer-events: none; 
+    line-height: 1.3;
+    white-space: pre-wrap; /* Preserves multiline notes cleanly */
+}
+
+.dp-notes-tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; 
+    right: 4px; 
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #334155 transparent;
+}
+
+.dp-notes-wrapper:hover .dp-notes-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
 
 .dp-media-icon {
     margin-top: 2px;
@@ -420,82 +484,84 @@
 /* =========================================
    === COMPACT MODE OVERRIDES ===
    ========================================= */
+
+/* Hides standard notes, model, and serial when in Compact Mode */
 .compact-mode .dp-drive-model,
 .compact-mode .dp-drive-serial,
 .compact-mode .dp-drive-notes {
-    display: none !important;
+    display: none !important; 
 }
 
-/* Because the elements are on the same line, the card can be super slim! */
+/* REVEALS Tooltip Icon when in Compact Mode */
+.compact-mode .dp-notes-wrapper {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    cursor: help;
+}
+
+/* Slim slot height */
 .compact-mode .dp-slot {
     height: 70px !important; 
 }
 
-/* Turns the card into a flex wrapper to put elements side-by-side */
+/* Turns the card into a flex wrapper and adds the custom border */
 .compact-mode .dp-card {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     align-content: flex-start;
-	padding-top: 6px;
-	padding-bottom: 0px;
+    padding-top: 6px;
+    padding-bottom: 0px;
+    border-left: 6px solid #cacaca !important; 
+}
+
+/* Fixes unplaced pool bottom padding */
+.compact-mode #dp-unplaced-pool .dp-card {
+    padding-bottom: 8px !important;
+}
+
+/* Applies your badge tweaks to the new badge container */
+.compact-mode .dp-badge-container {
+    top: 6px;
+}
+.compact-mode .dp-badge {
+    padding: 5px 8px;
+    border-radius: 5px;  
 }
 
 /* Forces the Drive Name to take up the entire top row */
 .compact-mode .dp-drive-name {
     width: 100%;
     margin-bottom: 6px;
+    font-size: 1.3rem !important; 
 }
 
-/* Scales down the Size text and aligns it vertically */
+/* Adjusts the Drive Size and Icon based on your latest edits */
 .compact-mode .dp-drive-size {
-    font-size: 1.4rem !important; 
+    font-size: 1.70rem !important; 
     line-height: 1;
     display: flex;
     align-items: center;
 }
 .compact-mode .dp-drive-size img {
-    height: 22px !important; 
+    height: 28px !important; 
     margin-right: 4px;
 }
 
-/* Puts the Serial Row on the same line as Size and takes the remaining space */
+/* Puts the Serial Row on the same line as Size */
 .compact-mode .dp-serial-row {
     flex-grow: 1;
     margin-top: 0 !important;
-    margin-left: 10px; /* Gap between Size and Serial Box */
+    margin-left: 10px; 
 }
 
-/* Scales down the large serial box so it fits cleanly in the narrow space */
+/* Scales the large serial box to fit cleanly */
 .compact-mode .dp-serial-large {
     font-size: 1.8rem !important; 
     padding: 2px 0 !important;
     letter-spacing: 2px !important;
 }
 
-.compact-mode .dp-drive-size img {
-  height: 28px !important;
-}
 
-.compact-mode .dp-drive-size {
-  font-size: 1.70rem;
-
-}
-
-.compact-mode .dp-badge {
-  top: 6px;
-  padding: 5px 8px;
-  border-radius: 5px;  
-  
-}
-
-.compact-mode #dp-unplaced-pool .dp-card {
-    padding-bottom: 8px;
-
-}
-
-.compact-mode .dp-card  {
-
-  border-left: 6px solid #cacaca;
-  
-}

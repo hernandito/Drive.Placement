@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         const customMeta = (savedLayout && savedLayout.metadata) ? savedLayout.metadata : {};
         
-        // === NEW: Initialize and Inject Compact Mode ===
         let isCompact = (savedLayout && savedLayout.settings && savedLayout.settings.compactMode) === true;
         document.body.classList.toggle('compact-mode', isCompact);
 
@@ -37,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
             saveBtn.disabled = true;
 
             try {
-                // === NEW: Saves the Compact Mode state into a settings object ===
                 const layout = { columns: [], metadata: {}, settings: { compactMode: isCompact } };
                 
                 document.querySelectorAll('.dp-column').forEach(col => {
@@ -142,10 +140,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const last4 = rawSerial.length >= 4 ? rawSerial.slice(-4) : rawSerial;
 
             const notesText = card.dataset.notes || "";
-            const notesHtml = notesText ? `<div class="dp-drive-notes">${notesText}</div>` : "";
+            
+            // Constructs the tooltip icon (used in compact mode)
+            const notesIconHtml = notesText ? `
+                <div class="dp-notes-wrapper">
+                    <i class="fa fa-info-circle dp-notes-icon"></i>
+                    <div class="dp-notes-tooltip">${notesText}</div>
+                </div>
+            ` : "";
 
+            // Constructs the standard 2-line notes (used in normal mode)
+            const standardNotesHtml = notesText ? `<div class="dp-drive-notes">${notesText}</div>` : "";
+
+            // Injects both versions! CSS will hide/show the appropriate one based on the mode toggle.
             card.innerHTML = `
-                <div class="dp-badge ${badgeClass}">${typeLabel}</div>
+                <div class="dp-badge-container">
+                    ${notesIconHtml}
+                    <div class="dp-badge ${badgeClass}">${typeLabel}</div>
+                </div>
+                
                 <div class="dp-drive-name">${displayName}</div>
                 <div class="dp-drive-size">${iconHtml} ${drive.size || "Unknown"}</div>
 
@@ -160,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 </div>
                 
-                ${notesHtml}
+                ${standardNotesHtml}
             `;
 
             card.querySelector('.dp-btn-edit').addEventListener('click', (e) => {
