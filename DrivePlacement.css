@@ -25,8 +25,10 @@
     margin-bottom: 10px;
 }
 
-.dp-title { margin: 0; font-size: 1.8rem; font-weight: 800; color:#5a5a5a; }
-.dp-subtitle { margin: 0 0 0 0; font-size: 1rem; color: #64748b; }
+.dp-title-wrap { display: flex; align-items: center; gap: 14px; margin-left: 4px; }
+.dp-case-img { height: 42px; width: auto; max-width: 70px; object-fit: contain; flex: 0 0 auto; }
+.dp-title { margin: 0; font-size: 2.1rem; font-weight: 700; color: #5a5a5a; }
+.dp-subtitle { margin: 0; margin-top: -3px; font-size: 1.2rem; color: #64748b; }
 
 .dp-controls { display: flex; gap: 10px; }
 

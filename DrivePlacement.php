@@ -229,9 +229,12 @@ $jsVer    = @filemtime("$dpBase/DrivePlacement.js")  ?: time();
 
 <div class="dp-wrapper">
     <div class="dp-header glass-panel">
-        <div>
-            <h2 class="dp-title">Drive Placement Map</h2>
-            <p class="dp-subtitle">Map your physical server layout.</p>
+        <div class="dp-title-wrap">
+            <img class="dp-case-img" src="/webGui/images/case-model.png" alt="Server case" onerror="this.style.display='none'">
+            <div>
+                <h2 class="dp-title">Drive Placement Map</h2>
+                <p class="dp-subtitle">Map your physical server layout.</p>
+            </div>
         </div>
         <div class="dp-controls">
             <button id="dp-save-layout" class="dp-btn dp-btn-success">💾 Save Layout</button>
