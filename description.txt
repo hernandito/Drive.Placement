@@ -1,3 +1,2 @@
 ####Drive Placement###
-Drive Placement is an interactive visualizer that allows you to map your physical unRAID server layout to a virtual dashboard. Easily drag and drop your active unRAID drives into custom columns representing your physical drive cages and stacks.
-
+Drive Placement is an interactive visualizer that maps your physical unRAID server layout to a virtual dashboard, so you always know which bay a drive lives in. Drag and drop your active drives into custom columns representing your cages and stacks. Each card shows temperature, usage, free space, type, and health, with custom naming, per-category and per-card background colors, a dark-skin aware theme, and layouts saved to your flash drive.

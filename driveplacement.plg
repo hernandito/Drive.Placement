@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.04.03a">
+<!ENTITY version "2026.11.06">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
@@ -17,7 +17,23 @@
 
 <CHANGES>
 
-###2026.04.04 
+###2026.11.06
+- Filesystem format shown on every card (xfs, btrfs, zfs, ntfs, fat, exfat ...).
+- Unassigned Devices now show temperature, usage, and free space like array/pool drives; unmounted devices are flagged "Not mounted".
+- Multi-partition UD drives list each partition (name, format, usage) below the card.
+- Identify button: blinks a drive's activity LED (read-only) to find it in the bay.
+- Non-compact cards now match the compact card width (they grow taller, not wider).
+- Smaller, squarer identify button; card and header styling polish.
+
+###2026.11.05
+- Major update. Redesigned drive cards: temperature pill, usage bar with free-space value, spun-down indicator, and in-flow type badge on a single top line.
+- Health awareness: drives with an issue are highlighted with a red card.
+- New categories: Pool (cache) and Flash are now distinct from Unassigned (UD).
+- Category background colors: assign a background color per category (Array, Parity, Pool, UD, Flash) via a color modal, plus a per-card color override. Ships with sensible default tints.
+- Dark skin support: automatically matches unRAID black/gray themes.
+- Per-column auto width (sizes to the widest card), cache-busted assets, and an Export PDF option.
+
+###2026.04.04
 - Notes icon in Compact Mode. CSS tweaks.
 
 ###2026.04.03a 
@@ -56,6 +72,10 @@
 
 <FILE Name="&plugdir;/save.php">
   <URL>https://raw.githubusercontent.com/&github;/main/save.php</URL>
+</FILE>
+
+<FILE Name="&plugdir;/identify.php">
+  <URL>https://raw.githubusercontent.com/&github;/main/identify.php</URL>
 </FILE>
 
 <FILE Name="&plugdir;/icons/hdd.png">
@@ -103,7 +123,7 @@ chmod -R 755 "$PLUGDIR"
 echo ""
 echo "----------------------------------------------------"
 echo " Drive Placement has been installed."
-echo " Version: 2026.04.01a"
+echo " Version: 2026.11.06"
 echo "----------------------------------------------------"
 echo ""
 ]]>

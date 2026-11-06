@@ -95,11 +95,12 @@
 }
 
 .dp-column {
-    flex: 0 0 260px;
+    flex: 0 0 auto;          /* JS (sizeColumns) sets an explicit px width per column */
+    min-width: 250px;
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding: 5px;
+    padding: 10px;
     background: rgba(241, 245, 249, 0.6);
     border: 1px dashed #cbd5e1;
     border-radius: 12px;
@@ -225,8 +226,8 @@
     position: relative;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    border: 1px solid #cacaca;
+    box-shadow: 0 4px 3px rgba(0,0,0,0.08);
+    border: 1px solid #ababab;
     width: 100%;
     box-sizing: border-box;
     z-index: 1;
@@ -249,15 +250,68 @@
     margin-bottom: 4px; 
     padding-right: 60px; 
 }
-.dp-drive-model { font-size: 12px; color: #475569; margin-bottom: 1px; }
-.dp-drive-serial { font-size: 12px; font-family: monospace; color: #5e5e5e; margin-bottom: 1px; }
-.dp-drive-size { font-size: 2.0rem; font-weight: 700; color: #059669; }
+.dp-drive-model { font-size: 1.2rem; color: #475569; margin-bottom: 1px; font-weight: 700; margin-top: 1px; overflow-wrap: anywhere; word-break: break-word; }
+.dp-drive-serial { font-size: 12px; font-family: monospace; color: #c40000; margin-bottom: 1px; overflow-wrap: anywhere; word-break: break-word; }
+.dp-drive-size { display: flex; align-items: center; gap: 7px; font-size: 2.0rem; font-weight: 700; color: #059669; }
+.dp-drive-size img { height: 26px !important; width: auto; flex: 0 0 auto; }
+.dp-size-stack { display: flex; flex-direction: column; justify-content: center; line-height: 1.02; min-width: 0; }
+.dp-size-val { font-size: 2.0rem; font-weight: 700; color: #059669; }
+/* small filesystem-format label under the size */
+.dp-fmt {
+    font-size: 1.20rem;
+    font-weight: 500;
+    color: #475569;
+    text-transform: lowercase;
+    letter-spacing: 0.4px;
+    margin-top: -1px;
+}
+
+/* "Not mounted" pill shown where the usage bar would go */
+.dp-notmounted {
+    font-size: 1.20rem;
+    font-style: italic;
+    font-weight: 600;
+    color: #9a6a00;
+    background: #fdf1d6;
+    border: 1px solid #e9cf94;
+    border-radius: 4px;
+    padding: 1px 7px;
+    white-space: nowrap;
+}
+
+/* Per-partition sub-lines (UD drives with more than one partition) */
+.dp-parts {
+    margin-top: 7px;
+    padding-top: 6px;
+    border-top: 1px dashed #d4d4d4;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.dp-part {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 1.1rem;
+}
+.dp-part-name { font-weight: 700; color: #4b5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40%; font-size: 1.2rem; }
+.dp-part-fmt {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #747474;
+    text-transform: lowercase;
+    letter-spacing: 0.3px;
+    flex: 0 0 auto;
+}
+.dp-part .dp-usage { flex: 1 1 auto; }
+.dp-part .dp-free { flex: 0 0 auto; }
+.dp-part-nm { font-size: 1.2rem; padding: 0 6px; }
 
 .dp-serial-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 4px;                 /* tighter space between serial box and identify button */
     margin-top: 5px;
 }
 
@@ -279,15 +333,14 @@
 
 /* === STANDARD MODE: Displays native 2-line notes === */
 .dp-drive-notes {
-    font-size: 11px;
-    color: #00698c;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: #575757;
     text-align: left;
-    margin-top: 0px; 
-    line-height: 1.2;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; 
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    margin-top: 4px;
+    line-height: 1.25;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* === STANDARD MODE: Hides Tooltip Icon by default === */
@@ -296,17 +349,16 @@
 }
 
 .dp-badge-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
-    z-index: 20; 
+    margin-left: auto;   /* in-flow: sits at the far right of the head row, reserving its own space */
+    flex: 0 0 auto;
+    z-index: 20;
 }
 
 .dp-badge {
-    padding: 6px 8px;
+    padding: 3px 8px;
     border-radius: 5px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -314,8 +366,9 @@
 }
 .badge-parity { background: #c40000; color: white; }
 .badge-data { background: #6aaf6e; color: white; }
-.badge-cache { background: #e59000; color: white; }
+.badge-cache { background: #e59000; color: white; border: 1px solid #787878; padding: 1px 8px !important; }
 .badge-unassigned { background: #7f7f7f; color: white; }
+.badge-flash { background: #3f7fb5; color: white; }
 
 /* === TOOLTIP POP-UP STYLING === */
 .dp-notes-icon {
@@ -427,11 +480,19 @@
 }
 
 .dp-edit-form input, .dp-edit-form select {
-    padding: 6px; 
+    padding: 6px;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
     width: 100%;
     box-sizing: border-box;
+}
+
+/* Let text in form fields be selected/copied, and stop fields acting as drag sources */
+.dp-edit-form input, .dp-edit-form select,
+.dp-cat-hex, .dp-edit-color-hex {
+    -webkit-user-drag: none;
+    user-select: text;
+    -webkit-user-select: text;
 }
 
 /* === ARMORED LOCKED MODE === */
@@ -445,9 +506,12 @@
     display: none !important; 
 }
 
-.locked .dp-slot:not(:has(.dp-card)) { 
-    border-color: transparent; 
-    background: transparent; 
+.locked .dp-slot:not(:has(.dp-card)) {
+    border-color: transparent;
+    background: transparent;
+    height: 24px !important;
+    border: 1px solid #dadada;
+    border-radius: 6px;
 }
 
 .locked .dp-slot:not(:has(.dp-card))::after { 
@@ -455,26 +519,27 @@
 }
 
 .locked .dp-column-title {
-    pointer-events: none; 
+    pointer-events: none;
     border-bottom: none;
     width: 100%;
     text-align: center;
     font-size: 1.4rem;
     color: #334155;
+    font-weight: 600;
     margin-right: 0;
 }
 
 .locked .dp-column-header {
     justify-content: left;
     padding-bottom: 0px;
-    background-color: #fffae9;
+    background-color: #dbdbdb;
     border-radius: 5px;
-    border: 1px solid #d4d4d4;
+    border: 1px solid #c0c0c0;
 }
 
 .locked .dp-column {
-    border: 1px solid #cbd5e1; 
-    background: transparent;
+    border: 1px solid #cbd5e1;
+    background: #ffffff8a;
 }
 
 .dp-drive-size img {
@@ -485,36 +550,67 @@
    === COMPACT MODE OVERRIDES ===
    ========================================= */
 
-/* Hides standard notes, model, and serial when in Compact Mode */
-.compact-mode .dp-drive-model,
-.compact-mode .dp-drive-serial,
-.compact-mode .dp-drive-notes {
-    display: none !important; 
+/* Hides standard model and serial when in Compact Mode (notes now shown inline) */
+/* Model + full serial live in .dp-detail, shown only when "Compact" is unchecked (show-details).
+   The card layout itself is always compact, so width is identical in both views. */
+/* Detail block (model + full serial): always in the DOM, collapsed in compact, animated open in details view. */
+.dp-detail {
+    display: block;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0 solid #d4d4d4;
+    transition: max-height .28s ease, opacity .2s ease, margin .28s ease, padding .28s ease;
+}
+.show-details .dp-detail {
+    max-height: 160px;
+    opacity: 1;
+    margin-top: 1px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #d4d4d4;
+}
+@media (prefers-reduced-motion: reduce) { .dp-detail { transition: none; } }
+/* Card slots expand with the detail; min-height holds the slim compact baseline during the animation. */
+.show-details .dp-slot:has(.dp-card) { height: auto !important; min-height: 74px; }
+
+/* Notes are now shown inline in compact too, so the hover-icon is redundant - hide it */
+.compact-mode .dp-notes-wrapper {
+    display: none !important;
 }
 
-/* REVEALS Tooltip Icon when in Compact Mode */
-.compact-mode .dp-notes-wrapper {
-    display: flex;
-    position: relative;
-    align-items: center;
-    justify-content: center;
-    cursor: help;
+/* Let a compact card with notes or partition sub-lines grow to fit them (others stay slim) */
+.compact-mode .dp-slot:has(.dp-card.has-notes),
+.compact-mode .dp-slot:has(.dp-card.has-parts) {
+    height: auto !important;
+}
+/* Partition sub-lines span the full card width below the inline size/serial line */
+.compact-mode .dp-parts { width: 100%; }
+.compact-mode .dp-drive-notes {
+    width: 100%;
+    margin-top: 4px;
 }
 
 /* Slim slot height */
 .compact-mode .dp-slot {
-    height: 70px !important; 
+    height: 74px !important;
 }
 
-/* Turns the card into a flex wrapper and adds the custom border */
+/* Compact card stays a plain block; .dp-main handles the inline size+serial line.
+   (A flex-wrap card would sum every line's width and blow the column out.) */
 .compact-mode .dp-card {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    align-content: flex-start;
+    display: block;
     padding-top: 6px;
-    padding-bottom: 0px;
-    border-left: 6px solid #cacaca !important; 
+    padding-bottom: 6px;
+    border-left: 6px solid #cacaca !important;
+}
+.compact-mode .dp-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* Fixes unplaced pool bottom padding */
@@ -522,20 +618,17 @@
     padding-bottom: 8px !important;
 }
 
-/* Applies your badge tweaks to the new badge container */
-.compact-mode .dp-badge-container {
-    top: 6px;
-}
 .compact-mode .dp-badge {
-    padding: 5px 8px;
-    border-radius: 5px;  
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 1.0rem;
+    text-transform: none;
 }
 
-/* Forces the Drive Name to take up the entire top row */
+/* Compact drive name sizing (head-row is its own line already) */
 .compact-mode .dp-drive-name {
-    width: 100%;
-    margin-bottom: 6px;
-    font-size: 1.3rem !important; 
+    font-size: 1.6rem !important;
+    font-weight: 700;
 }
 
 /* Adjusts the Drive Size and Icon based on your latest edits */
@@ -550,18 +643,249 @@
     margin-right: 4px;
 }
 
-/* Puts the Serial Row on the same line as Size */
+/* Serial box fills the rest of the .dp-main line; small right margin keeps the LED off the edge */
 .compact-mode .dp-serial-row {
     flex-grow: 1;
-    margin-top: 0 !important;
-    margin-left: 10px; 
+    margin: 0 2px 0 0 !important;
 }
 
 /* Scales the large serial box to fit cleanly */
 .compact-mode .dp-serial-large {
-    font-size: 1.8rem !important; 
-    padding: 2px 0 !important;
+    font-size: 1.8rem !important;
+    padding: 1px 0 !important;
     letter-spacing: 2px !important;
 }
+
+/* === Non-compact: collapse FILLED slots to card content (removes empty space below serial) === */
+/* Empty slots keep their fixed 165px so they remain visible drop targets; compact mode (70px !important) is unaffected. */
+.dp-slot:has(.dp-card) { height: auto; }
+
+/* ============================================================
+   Card top line:  Name - (temp)  [bar]  Free: x.xx TB   [badge]
+   ============================================================ */
+.dp-head-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: nowrap;
+    min-width: 0;
+    border-bottom: solid 1px #d4d4d4;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+}
+
+/* While measuring natural card widths, disable the serial box's flex-grow
+   so it reports its content size instead of filling the card. */
+.dp-measuring .dp-serial-row,
+.dp-measuring .dp-serial-large { flex-grow: 0 !important; }
+.dp-head-row .dp-drive-name {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    padding-right: 0;
+    white-space: nowrap;   /* don't truncate: long names widen the column (original behavior) */
+}
+
+/* Temperature: pill badge, tinted by category */
+.dp-temp {
+    flex: 0 0 auto;
+    font-size: 1.180rem;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 1px 9px;
+    border-radius: 999px;
+    line-height: 1.45;
+}
+.dp-temp.temp-ok    { color: #15803d; background: #e7f3ea; }
+.dp-temp.temp-cool  { color: #0369a1; background: #e4f0f7; }
+.dp-temp.temp-warm  { color: #b45309; background: #fbf0e0; }
+.dp-temp.temp-hot   { color: #b91c1c; background: #fbe6e6; }
+.dp-temp.temp-sleep {
+    color: #64748b;
+    background: #eef1f4;
+    font-size: 1.00rem;
+    border: 1px solid #cdcdcd;
+    padding: 0px 5px;
+    border-radius: 4px;
+}
+
+/* Short, light, pure-grey usage bar + free-space value (gap to value kept tight) */
+.dp-usage {
+    flex: 0 0 64px;
+    height: 8px;
+    background: #ececec;
+    border-radius: 4px;
+    overflow: hidden;
+    border: solid 1px #959595;
+}
+.dp-usage-fill { display: block; height: 100%; background: #b8b8b8; border-radius: 0px; }
+.dp-free { flex: 0 0 auto; font-size: 1.0rem; font-weight: 600; color: #475569; white-space: nowrap; margin-left: -3px; }
+
+/* Issue state OVERRIDES any card background: pale-red + full red border, thicker red left */
+.dp-card.dp-issue {
+  background: #ffe7e7;
+  border-left: 5px solid #bf0000 !important;
+  border: solid 1px #bf0000;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: rgb(191, 0, 0);
+}
+
+/* Spun-down: dim the media icon */
+.dp-spundown .dp-drive-size img { opacity: 0.3; filter: grayscale(1); }
+
+/* Badge now lives in-flow at the head-row's right edge, so no padding hack is needed. */
+
+/* ============================================================
+   Category Colors button + modal
+   ============================================================ */
+.locked #dp-category-colors { display: none !important; }
+
+.dp-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.dp-modal {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 500px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    padding: 20px 22px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;         /* px base: unRAID's small root font-size would shrink rem/em */
+    color: #1e293b;
+}
+.dp-modal button { text-transform: none; }   /* kill unRAID's uppercase button styling */
+.dp-modal-head { display: flex; align-items: center; justify-content: space-between; }
+.dp-modal-head h3 { margin: 0; font-size: 21px; font-weight: 700; color: #334155; }
+.dp-modal-x {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: #94a3b8;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 7px;
+    padding: 0;
+}
+.dp-modal-x:hover { background: #f1f5f9 !important; color: #0f172a; }
+.dp-modal-note { font-size: 13px; color: #64748b; margin: 8px 0 16px; line-height: 1.45; }
+.dp-cat-list { display: flex; flex-direction: column; gap: 12px; }
+.dp-cat-row { display: flex; align-items: center; gap: 9px; }
+.dp-cat-label { flex: 0 0 140px; font-size: 15px; font-weight: 600; color: #334155; }
+.dp-cat-swatch { flex: 0 0 26px; height: 26px; border-radius: 5px; border: 1px solid #cbd5e1; }
+.dp-cat-pick { width: 42px; height: 32px; padding: 0; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; cursor: pointer; }
+.dp-cat-hex { flex: 1; min-width: 0; padding: 6px 9px; border: 1px solid #cbd5e1; border-radius: 4px; font-family: monospace; font-size: 15px; box-sizing: border-box; }
+.dp-cat-reset { padding: 7px 11px; font-size: 13px; font-weight: 600; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; cursor: pointer; color: #475569; white-space: nowrap; }
+.dp-cat-reset:hover { background: #e2e8f0; }
+.dp-modal-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.dp-modal-foot .dp-btn { padding: 9px 20px; font-size: 12px; font-weight: 600; border-radius: 8px; box-shadow: none; }
+.dp-modal-foot .dp-cat-cancel { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.dp-modal-foot .dp-cat-cancel:hover { background: #e2e8f0; }
+.dp-modal-foot .dp-cat-apply { background: #3b82f6; color: #fff; border: 1px solid #3b82f6; }
+.dp-modal-foot .dp-cat-apply:hover { background: #2563eb; }
+
+/* ============================================================
+   Dark skin (unRAID black / gray themes)  -> body.dp-dark
+   ============================================================ */
+.dp-dark .dp-wrapper { background: linear-gradient(135deg, #1b1c1f 0%, #212327 100%); color: #e5e7eb; }
+.dp-dark .glass-panel { background: rgba(40,42,46,0.72); border-color: #3a3d42; }
+.dp-dark .dp-title { color: #e8eaed; }
+.dp-dark .dp-subtitle { color: #9aa3ad; }
+.dp-dark .dp-btn-secondary { color: #d6dadf; }
+.dp-dark .dp-btn-secondary:hover { background: #343841; }
+
+.dp-dark .dp-column { background: transparent; border-color: #3a3d42; }
+.dp-dark.locked .dp-column { border-color: #3a3d42; background: rgba(255,255,255,0.03); }
+.dp-dark .dp-column-title { color: #e8eaed; }
+.dp-dark.locked .dp-column-title { color: #e8eaed; }
+.dp-dark .dp-column-header { border-bottom-color: #3a3d42; }
+.dp-dark.locked .dp-column-header { background-color: #33373d; border: none; }
+
+.dp-dark .dp-card { background: #26282c; border-color: #3a3d42; color: #e5e7eb; }
+.dp-dark.locked .dp-card { border-left-color: #3a5a70; }
+.dp-dark .dp-drive-name { color: #d6dadf; }
+.dp-dark .dp-drive-model, .dp-dark .dp-drive-serial { color: #9aa3ad; }
+.dp-dark .dp-drive-size { color: #34d399; }
+.dp-dark .dp-head-row { border-bottom-color: #3a3d42; }
+.dp-dark .show-details .dp-detail { border-bottom-color: #3a3d42; }
+.dp-dark .dp-drive-serial { color: #ff6b6b; }
+.dp-dark .dp-serial-large { background: #1b1c1f; color: #ff6b6b; border-color: #44474d; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
+.dp-dark .dp-usage { background: #3a3d42; border-color: #5b5f66; }
+.dp-dark .dp-usage-fill { background: #8b9096; }
+.dp-dark .dp-free { color: #c3c9d0; }
+.dp-dark .dp-fmt, .dp-dark .dp-part-fmt { color: #9aa3ad; }
+.dp-dark .dp-part-name { color: #c3c9d0; }
+.dp-dark .dp-parts { border-top-color: #44474d; }
+.dp-dark .dp-notmounted { color: #e0b667; background: #332a16; border-color: #5a4a26; }
+.dp-dark .dp-slot:not(:has(.dp-card))::after { color: #9aa3ad; }
+.dp-dark .dp-temp.temp-sleep { background: #2f3337; color: #9aa3ad; border-color: #4a4e54; }
+.dp-dark .dp-action-btn { background: #2f3337 !important; color: #c3c9d0 !important; border-color: #4a4e54 !important; }
+.dp-dark .dp-edit-form { background: #26282c; border-color: #3b82f6; }
+.dp-dark .dp-edit-form input, .dp-dark .dp-edit-form select { background: #1b1c1f; color: #e5e7eb; border-color: #44474d; }
+
+/* Modal in dark skin (modal is appended to body, which carries .dp-dark) */
+.dp-dark .dp-modal { background: #26282c; color: #e5e7eb; }
+.dp-dark .dp-modal-head h3 { color: #e8eaed; }
+.dp-dark .dp-modal-note { color: #9aa3ad; }
+.dp-dark .dp-cat-label { color: #d6dadf; }
+.dp-dark .dp-cat-hex { background: #1b1c1f; color: #e5e7eb; border-color: #44474d; }
+.dp-dark .dp-cat-swatch { border-color: #4a4e54; }
+.dp-dark .dp-cat-reset { background: #343841; color: #c3c9d0; border-color: #4a4e54; }
+.dp-dark .dp-cat-reset:hover { background: #3f444d; }
+.dp-dark .dp-modal-x { color: #9aa3ad; }
+.dp-dark .dp-modal-x:hover { background: #343841 !important; color: #e8eaed; }
+.dp-dark .dp-modal-foot .dp-cat-cancel { background: #343841; color: #d6dadf; border-color: #4a4e54; }
+.dp-dark .dp-modal-foot .dp-cat-cancel:hover { background: #3f444d; }
+.dp-dark .dp-drive-notes { color: #c3c9d0; }
+
+/* ============================================================
+   Identify (blink activity LED) button
+   ============================================================ */
+.dp-led {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 26px;
+    min-width: 18px;
+    box-sizing: border-box;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;          /* no fill - discrete */
+    border: 1px solid #d4d4d4 !important;   /* matches the serial box border */
+    border-radius: 4px;
+    color: #9ca3af;
+    cursor: pointer;
+    order: 3;                         /* sits to the RIGHT of the serial box, both modes */
+    margin-left: 6px;
+    transition: color .15s;
+}
+.dp-led:hover {
+    color: #d8000d !important;
+    background: #fffcf2 !important;
+    border-color: #d8000d !important;
+}
+.dp-led:disabled { cursor: default; }
+.dp-led svg { display: block; }
+.dp-led.blinking { color: #bf0000; animation: dp-led-blink 0.7s steps(1) infinite; }
+@keyframes dp-led-blink { 50% { color: #e6b3b3; } }
+
+/* Compact: spacing via the flex gap so the serial box keeps its full size */
+.compact-mode .dp-serial-row .dp-led { margin: 0; }
+
+/* Dark skin - transparent fill, border matches the dark serial box */
+.dp-dark .dp-led { border-color: #44474d; color: #9aa3ad; }
+.dp-dark .dp-led:hover { color: #ff6b6b; }
+.dp-dark .dp-led.blinking { color: #ff6b6b; }
 
 

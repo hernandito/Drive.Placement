@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Containers>
-<Plugin>True</Plugin>
-<PluginURL>https://raw.githubusercontent.com/hernandito/quick.favorites/main/quick.favorites.plg</PluginURL>
-<PluginAuthor>hernandito</PluginAuthor>
-<Beta>False</Beta>
-<Category>Tools:System</Category>
-<Name>Quick.Favorites</Name>
-<Description>
-Quick Favorites is custom favorites menu for the Unraid header. It brings up a quick pop-up to directly navigate where you want to go. Easily navigate to pages, Docker containers, external links, and User Scripts with live previews and comprehensive icon support.</Description>
-<Support>https://forums.unraid.net/topic/197973-plugin-quick-favorites-custom-favorites-menu-pop-up/</Support>
-<IconFA>star</IconFA>
-<DonateImg></DonateImg>
-<DonateLink></DonateLink>
-<Screenshot>https://github.com/hernandito/quick.favorites/blob/main/screenshots/menu-open-cropped.png?raw=true</Screenshot>
-</Containers>
+<Plugin>
+  <Name>Drive Placement</Name>
+  <Overview><![CDATA[An interactive, drag-and-drop visualizer that maps your physical unRAID server layout to a virtual dashboard, so you always know which bay a drive lives in. Each drive card shows its temperature, usage, free space, type, and health at a glance, with custom naming, per-category and per-card background colors, a dark-skin aware theme, and layouts saved to your flash drive.]]></Overview>
+  <PluginURL>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/driveplacement.plg</PluginURL>
+  <PluginAuthor>hernandito</PluginAuthor>
+  <Support>https://github.com/hernandito/Drive.Placement/issues</Support>
+  <Project>https://github.com/hernandito/Drive.Placement</Project>
+  <ReadMe>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/README.md</ReadMe>
+  <Category>Tools:Utilities Tools:System</Category>
+  <MinVer>6.12.0</MinVer>
+  <Icon>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/icon.png</Icon>
+  <License>MIT</License>
+  <Screenshot>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-unlocked.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-compact.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-pdf.png</Screenshot>
+</Plugin>
