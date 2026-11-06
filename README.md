@@ -2,11 +2,13 @@
 
 ![Drive Placement - locked view](screenshot.png)
 
-![Drive Placement - compact mode](screenshot-compact.png)
+
 
 ![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
+Unlocked mode
 
 ![Drive Placement - printable PDF report](screenshot-pdf.png)
+Print Layout
 
 **Drive Placement** is an interactive, drag-and-drop visualizer that maps your physical unRAID server layout to a virtual dashboard. When a drive fails, you'll know exactly which bay to pull - never guess which physical slot "Disk 5" lives in again.
 
