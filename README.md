@@ -1,10 +1,10 @@
-# Drive Placement Map for unRAID
+# Drive Placement for unRAID
 
 ![Drive Placement - locked view](screenshot.png)
 
-![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
-
 ![Drive Placement - compact mode](screenshot-compact.png)
+
+![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
 
 ![Drive Placement - printable PDF report](screenshot-pdf.png)
 
