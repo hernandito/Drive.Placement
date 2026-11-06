@@ -16,6 +16,8 @@
 
 **Setup takes about a minute.** There's nothing to configure - your drives show up automatically, you just **drag them into columns** that match your case and hit Save. No tray definitions, no per-slot forms, no fiddly wizard.
 
+Create with assistance of Claude AI.
+
 ## Features
 
 ### Layout
