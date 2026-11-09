@@ -223,10 +223,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 usageHtml = `<span class="dp-notmounted" title="This device is not mounted - no filesystem usage available">Not mounted</span>`;
             } else if (usedPct !== null) {
                 const sizeTxt = drive.size ? ' of ' + drive.size : '';
-                const barTtl = `${usedPct}% used${sizeTxt}` + (drive.freeLabel ? `  ·  ${drive.freeLabel} free (${100 - usedPct}% free)` : '');
-                const freeTtl = drive.freeLabel ? `Free space: ${drive.freeLabel} (${100 - usedPct}% free)${sizeTxt}` : 'Free space';
+                const freePct = 100 - usedPct;
+                const barTtl = `${usedPct}% used${sizeTxt}` + (drive.freeLabel ? `  ·  ${drive.freeLabel} free (${freePct}% free)` : '');
+                const freeTtl = drive.freeLabel ? `Free space: ${drive.freeLabel} (${freePct}% free)${sizeTxt}` : 'Free space';
+                const freeTxt = drive.freeLabel ? `Free: ${drive.freeLabel} - ${freePct}%` : `${freePct}% free`;
                 usageHtml = `<span class="dp-usage" title="${barTtl}"><span class="dp-usage-fill" style="width:${usedPct}%"></span></span>` +
-                            (drive.freeLabel ? `<span class="dp-free" title="${freeTtl}">${drive.freeLabel}</span>` : '');
+                            `<span class="dp-free" title="${freeTtl}">${freeTxt}</span>`;
             }
 
             // --- filesystem format label (xfs / ntfs / zfs ...) shown under the drive size ---
@@ -279,12 +281,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="dp-head-row">
                     <span class="dp-drive-name">${displayName}</span>
                     ${tempHtml}
-                    ${usageHtml}
                     <div class="dp-badge-container">
                         ${notesIconHtml}
                         <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${typeLabel}</div>
                     </div>
                 </div>
+                ${usageHtml ? `<div class="dp-usage-row">${usageHtml}</div>` : ""}
 
                 <div class="dp-detail">
                     <div class="dp-drive-model">${drive.model || "Unknown"}</div>

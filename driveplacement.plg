@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.11.06">
+<!ENTITY version "2026.11.09">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
@@ -16,6 +16,11 @@
         min="6.12.0">
 
 <CHANGES>
+
+###2026.11.09
+- Usage bar moved to its own full-width line below the drive name, ending with a "Free: x.xx TB - nn%" readout.
+- Category badge (Array, Parity, Pool, UD, Flash) pinned to the card's top-right; the divider now sits below the usage bar.
+- Compact cards grow to fit the new usage line; size-icon and format-label spacing polish.
 
 ###2026.11.06
 - Filesystem format shown on every card (xfs, btrfs, zfs, ntfs, fat, exfat ...).

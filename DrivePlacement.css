@@ -266,6 +266,7 @@
     text-transform: lowercase;
     letter-spacing: 0.4px;
     margin-top: -1px;
+    margin-left: 3px;
 }
 
 /* "Not mounted" pill shown where the usage bar would go */
@@ -641,8 +642,8 @@
     align-items: center;
 }
 .compact-mode .dp-drive-size img {
-    height: 28px !important; 
-    margin-right: 4px;
+    height: 32px !important;
+    margin-right: -3px;
 }
 
 /* Serial box fills the rest of the .dp-main line; small right margin keeps the LED off the edge */
@@ -721,6 +722,36 @@
 }
 .dp-usage-fill { display: block; height: 100%; background: #b8b8b8; border-radius: 0px; }
 .dp-free { flex: 0 0 auto; font-size: 1.0rem; font-weight: 600; color: #475569; white-space: nowrap; margin-left: -3px; }
+
+/* ------------------------------------------------------------
+   Usage row: the progress bar + free value now live on their OWN
+   line, directly under the head row, in EVERY view. The head row
+   keeps name + temperature on the left and the category pill on
+   the right. This keeps the card narrow (the bar no longer pads
+   the head row's width).
+   ------------------------------------------------------------ */
+.dp-usage-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: solid 1px #d4d4d4;   /* the divider now sits BELOW the progress bar */
+}
+/* The bar stretches to fill the card; the "Free: x - y%" text sits at the end. */
+.dp-usage-row .dp-usage { flex: 1 1 auto; }
+/* When a usage row is present, the head row drops its own divider so there is
+   no line between the name row and the progress bar. (Parity drives have no
+   usage row, so their head-row divider stays.) */
+.dp-card:has(.dp-usage-row) .dp-head-row {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+/* Compact: let a filled card grow the one extra line (empty drop slots stay slim). */
+.compact-mode .dp-slot:has(.dp-card) { height: auto !important; }
+.compact-mode .dp-usage-row { margin-top: 3px; margin-bottom: 3px; padding-bottom: 3px; }
 
 /* Issue state OVERRIDES any card background: pale-red + full red border, thicker red left */
 .dp-card.dp-issue {
@@ -819,6 +850,7 @@
 .dp-dark .dp-drive-model, .dp-dark .dp-drive-serial { color: #9aa3ad; }
 .dp-dark .dp-drive-size { color: #34d399; }
 .dp-dark .dp-head-row { border-bottom-color: #3a3d42; }
+.dp-dark .dp-usage-row { border-bottom-color: #3a3d42; }
 .dp-dark .show-details .dp-detail { border-bottom-color: #3a3d42; }
 .dp-dark .dp-drive-serial { color: #ff6b6b; }
 .dp-dark .dp-serial-large { background: #1b1c1f; color: #ff6b6b; border-color: #44474d; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); }
