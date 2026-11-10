@@ -15,21 +15,6 @@ Create with assistance of Claude AI.
 ![Drive Placement - locked view](screenshot.png)
 **Standard View**
 
-![Drive Placement - compact mode](screenshot-compact.png)
-**Compact View**
-
-![Drive Placement - ultra-compact view](screenshot-ultra.png)
-**Ultra-Compact View**
-
-![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
-**Unlocked Mode**
-
-![Drive Placement - drive edit form](screenshot-editable.png)
-**Edit Drive**
-
-![Drive Placement - printable PDF report](screenshot-pdf.png)
-**Print Layout**
-
 ## Features
 
 ### Layout
@@ -37,6 +22,9 @@ Create with assistance of Claude AI.
 * **Per-column auto-width** - each column sizes itself to its widest card, independently of the others.
 * **Locked / Unlocked modes** - lock the dashboard to prevent accidental changes. Empty slots stay visible when locked, so the air-gaps in your case are represented accurately.
 * **Compact mode** - a slim single-line card view for dense layouts.
+
+![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
+**Unlocked Mode**
 
 ### Drive cards
 * **At-a-glance status** - each card shows the drive's temperature (color-coded pill), usage bar, free space, size, filesystem format, media type, and the last four of the serial number.
@@ -50,16 +38,28 @@ Create with assistance of Claude AI.
 
 > **Why only the last 4 of the serial?** The large red characters on each card are the **last four of the drive's serial number** - the same short tag you can physically write on the drive, so what you see on the dashboard matches the label on the drive in the bay. When a drive fails, you match those four characters and you know exactly which one to pull. Need the full brand, model, and complete serial? Turn **off Compact mode** and they're shown on every card.
 
+![Drive Placement - compact mode](screenshot-compact.png)
+**Compact View**
+
+![Drive Placement - ultra-compact view](screenshot-ultra.png)
+**Ultra-Compact View**
+
 ### Appearance
 * **Category background colors** - assign a background color to each category (Array, Parity, Pool, UD, Flash) from the color modal, with sensible default tints shipped out of the box.
 * **Per-card color override** - give any individual drive its own background color from the edit panel.
 * **Dark-skin aware** - the dashboard automatically matches unRAID's black/gray themes, with a tuned dark palette for cards, columns, and the color modal.
+
+![Drive Placement - drive edit form](screenshot-editable.png)
+**Edit Drive**
 
 ### Other
 * **Custom naming and media types** - click the pencil on any drive to set a custom name and media type (HDD, SATA SSD, NVMe, USB).
 * **Per-drive notes** - add notes that appear as a tooltip in compact mode.
 * **Print / PDF report** - generate a clean, printable report of your layout (letter/A4, auto portrait or landscape) with the **Print** button.
 * **Persistent layouts** - everything is saved to your flash drive (`/boot/config/plugins/driveplacement/layout.json`), surviving reboots and plugin updates.
+
+![Drive Placement - printable PDF report](screenshot-pdf.png)
+**Print Layout**
 
 ## How is this different from "Disk Location"?
 
