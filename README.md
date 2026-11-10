@@ -1,5 +1,17 @@
 # Drive Placement for unRAID
 
+**Drive Placement** is an interactive, drag-and-drop visualizer that maps your physical unRAID server layout to a virtual dashboard. When a drive fails, you'll know exactly which bay to pull - never guess which physical slot "Disk 5" lives in again.
+
+**Setup takes about a minute.** There's nothing to configure - your drives show up automatically, you just **drag them into columns** that match your case and hit Save. No tray definitions, no per-slot forms, no fiddly wizard.
+
+Create with assistance of Claude AI.
+
+<p align="center">
+  <a href="https://www.buymeacoffee.com/hernandito" target="_blank">
+    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" width="122" height="34">
+  </a>
+</p>
+
 ![Drive Placement - locked view](screenshot.png)
 **Standard View**
 
@@ -17,12 +29,6 @@
 
 ![Drive Placement - printable PDF report](screenshot-pdf.png)
 **Print Layout**
-
-**Drive Placement** is an interactive, drag-and-drop visualizer that maps your physical unRAID server layout to a virtual dashboard. When a drive fails, you'll know exactly which bay to pull - never guess which physical slot "Disk 5" lives in again.
-
-**Setup takes about a minute.** There's nothing to configure - your drives show up automatically, you just **drag them into columns** that match your case and hit Save. No tray definitions, no per-slot forms, no fiddly wizard.
-
-Create with assistance of Claude AI.
 
 ## Features
 
