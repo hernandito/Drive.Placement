@@ -6,8 +6,14 @@
 ![Drive Placement - compact mode](screenshot-compact.png)
 **Compact View**
 
+![Drive Placement - ultra-compact view](screenshot-ultra.png)
+**Ultra-Compact View**
+
 ![Drive Placement - unlocked editing mode](screenshot-unlocked.png)
 **Unlocked Mode**
+
+![Drive Placement - drive edit form](screenshot-editable.png)
+**Edit Drive**
 
 ![Drive Placement - printable PDF report](screenshot-pdf.png)
 **Print Layout**

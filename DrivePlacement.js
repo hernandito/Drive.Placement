@@ -31,18 +31,41 @@ document.addEventListener("DOMContentLoaded", () => {
         const CATEGORY_DEFAULTS_DARK  = { parity: '#322c40', pool: '#3a3326', unassigned: '#30333a', flash: '#26373d' };
         const categoryDefaults = document.body.classList.contains('dp-dark') ? CATEGORY_DEFAULTS_DARK : CATEGORY_DEFAULTS_LIGHT;
 
-        // Compact is the DEFAULT view; a saved preference overrides it. The card layout is ALWAYS
-        // "compact" - the Compact checkbox only shows/hides the model+serial detail block below the head row.
-        let isCompact = (savedLayout && savedLayout.settings && typeof savedLayout.settings.compactMode === 'boolean')
-            ? savedLayout.settings.compactMode : true;
+        // Three view densities: 'standard' | 'compact' | 'ultra'. The card markup is ALWAYS built
+        // "compact"; the view mode only shows/hides blocks:
+        //   standard = also show the model+serial detail block (adds .show-details)
+        //   compact  = head row + usage bar + size/serial line
+        //   ultra    = a single line per card (adds .ultra-mode): name - size [serial] [pill]
+        // Back-compat: older layouts stored a boolean settings.compactMode.
+        let viewMode = 'compact';
+        if (savedLayout && savedLayout.settings) {
+            if (typeof savedLayout.settings.viewMode === 'string') {
+                viewMode = savedLayout.settings.viewMode;
+            } else if (typeof savedLayout.settings.compactMode === 'boolean') {
+                viewMode = savedLayout.settings.compactMode ? 'compact' : 'standard';
+            }
+        }
         document.body.classList.add('compact-mode');
-        document.body.classList.toggle('show-details', !isCompact);
+        function applyViewMode(mode) {
+            viewMode = mode;
+            document.body.classList.toggle('show-details', mode === 'standard');
+            document.body.classList.toggle('ultra-mode', mode === 'ultra');
+        }
+        applyViewMode(viewMode);
 
         const controlsDiv = document.querySelector('.dp-controls');
-        const compactLabel = document.createElement('label');
-        compactLabel.className = 'dp-btn dp-btn-secondary dp-compact-label';
-        compactLabel.innerHTML = `<input type="checkbox" id="dp-compact-toggle" style="margin-right: 5px; transform: scale(1.2);" ${isCompact ? 'checked' : ''}> Compact`;
-        controlsDiv.insertBefore(compactLabel, toggleBtn);
+        const viewControl = document.createElement('div');
+        viewControl.className = 'dp-viewmode';
+        viewControl.innerHTML = `
+            <label class="dp-vm-opt"><input type="radio" name="dp-view" value="standard"> Standard</label>
+            <label class="dp-vm-opt"><input type="radio" name="dp-view" value="compact"> Compact</label>
+            <label class="dp-vm-opt"><input type="radio" name="dp-view" value="ultra"> Ultra-Compact</label>
+        `;
+        controlsDiv.insertBefore(viewControl, toggleBtn);
+        const vmChecked = viewControl.querySelector(`input[value="${viewMode}"]`);
+        if (vmChecked) vmChecked.checked = true;
+        // Height is a fixed 30px in CSS; the selector is vertically centered on the
+        // taller Print/Mode buttons via align-self:center (no JS height-matching).
 
         // Category Colors button (shown only in unlocked mode)
         const catColorBtn = document.createElement('button');
@@ -60,16 +83,16 @@ document.addEventListener("DOMContentLoaded", () => {
         controlsDiv.insertBefore(pdfBtn, toggleBtn);
         pdfBtn.addEventListener('click', exportPdf);
 
-        document.getElementById('dp-compact-toggle').addEventListener('change', (e) => {
-            isCompact = e.target.checked;
-            document.body.classList.toggle('show-details', !isCompact);
+        viewControl.addEventListener('change', (e) => {
+            if (!e.target || e.target.name !== 'dp-view') return;
+            applyViewMode(e.target.value);
             if (window.dpSizeColumns) requestAnimationFrame(window.dpSizeColumns);
             persistCompactPref();   // remember the view choice across page loads
         });
 
         // Build the full layout object from the current DOM (shared by Save and the compact-pref auto-save).
         function buildLayout() {
-            const layout = { columns: [], metadata: {}, categoryColors: categoryColors, settings: { compactMode: isCompact } };
+            const layout = { columns: [], metadata: {}, categoryColors: categoryColors, settings: { viewMode: viewMode, compactMode: viewMode !== 'standard' } };
             document.querySelectorAll('.dp-column').forEach(col => {
                 const titleInput = col.querySelector('.dp-column-title');
                 const title = titleInput ? titleInput.value : "Column";
@@ -278,6 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
             // The card is always laid out "compact". The .dp-detail block (model + full serial) sits
             // between the head row and the main line, and is shown only when "Compact" is unchecked.
             card.innerHTML = `
+                <div class="dp-ultra-line">
+                    <span class="dp-ultra-name">${displayName}</span>
+                    <span class="dp-ultra-sep">-</span>
+                    <span class="dp-ultra-size">${drive.size || ""}</span>
+                    <span class="dp-ultra-serial" title="${serialTitle}">${last4.toUpperCase()}</span>
+                    <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${typeLabel}</div>
+                </div>
                 <div class="dp-head-row">
                     <span class="dp-drive-name">${displayName}</span>
                     ${tempHtml}
@@ -512,6 +542,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // measure the real rendered content (immune to that) and set explicit widths.
         function sizeColumns() {
             const compact = document.body.classList.contains('compact-mode');
+            const ultra = document.body.classList.contains('ultra-mode');
             const cols = [...layoutGrid.querySelectorAll('.dp-column')];
             if (!cols.length) return;
             cols.forEach(c => { c.style.width = ''; c.style.flex = ''; });  // reset before measuring
@@ -519,6 +550,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const widths = cols.map(col => {
                 let need = 0;
                 col.querySelectorAll('.dp-card').forEach(card => {
+                    if (ultra) {
+                        const ul = card.querySelector('.dp-ultra-line');
+                        let uw = 0;
+                        if (ul) {
+                            const uk = [...ul.children].filter(k => k.offsetWidth > 0);
+                            uw = uk.reduce((a, k) => a + k.offsetWidth, 0) + Math.max(0, uk.length - 1) * 8;
+                        }
+                        if (uw > need) need = uw;
+                        return;
+                    }
                     const hr = card.querySelector('.dp-head-row');
                     let headW = 0;
                     if (hr) {

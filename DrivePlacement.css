@@ -5,7 +5,7 @@
     color: #1e293b;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     border-radius: 12px;
-    padding-top: 5px;
+    padding-top: 0px;
 }
 
 .glass-panel {
@@ -52,6 +52,48 @@
     align-items: center;
     cursor: pointer;
     user-select: none;
+}
+
+/* 3-way view-density selector: Standard / Compact / Ultra-Compact.
+   Flat joined tabs in the unRAID style (like the "Shares | Whole OS" toggle):
+   one bordered group, rounded only on the outer corners, divider between tabs,
+   grey selected state. Explicit padding matches the Print/Mode button height. */
+.dp-viewmode {
+    display: inline-flex;
+    align-items: stretch;
+    align-self: flex-end;                        /* bottom-align with the Print/Mode buttons */
+    box-sizing: border-box;
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f4f6f8;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    height: 22px;
+    margin: 0 12px 10px 0;                        /* 10px bottom margin matches the buttons' so the bottoms line up */
+}
+.dp-vm-opt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 14px;
+    cursor: pointer;
+    color: #51607a;
+    font-size: 1.2rem;
+    font-weight: 500;
+    user-select: none;
+    white-space: nowrap;
+    border-right: 1px solid #c3cad4;
+    transition: background 0.12s, color 0.12s;
+}
+.dp-vm-opt:last-child { border-right: none; }
+.dp-vm-opt:hover { background: #e8ebef; }
+.dp-vm-opt input { display: none; }
+.dp-vm-opt:has(input:checked) {
+    background: #dfdfdf;
+    color: #1f2937;
+    font-weight: 700;
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.10);
 }
 
 .dp-btn-success { background: #10b981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
@@ -227,7 +269,7 @@
     cursor: grab;
     position: relative;
     background: white;
-    border-radius: 10px;
+    border-radius: 6px;
     box-shadow: 0 4px 3px rgba(0,0,0,0.08);
     border: 1px solid #ababab;
     width: 100%;
@@ -477,8 +519,8 @@
     background: #f8fafc;
     padding: 15px;
     border-radius: 10px;
-    border: 2px solid #3b82f6; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+    border: 2px solid #8f8f8f;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     box-sizing: border-box;
 }
 
@@ -836,6 +878,10 @@
 .dp-dark .dp-subtitle { color: #9aa3ad; }
 .dp-dark .dp-btn-secondary { color: #d6dadf; }
 .dp-dark .dp-btn-secondary:hover { background: #343841; }
+.dp-dark .dp-viewmode { background: #2a2e35; border-color: #454a52; }
+.dp-dark .dp-vm-opt { color: #aeb6c2; border-right-color: #454a52; }
+.dp-dark .dp-vm-opt:hover { background: #343841; }
+.dp-dark .dp-vm-opt:has(input:checked) { background: #4a5059; color: #ffffff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.40); }
 
 .dp-dark .dp-column { background: transparent; border-color: #3a3d42; }
 .dp-dark.locked .dp-column { border-color: #3a3d42; background: rgba(255,255,255,0.03); }
@@ -923,3 +969,85 @@
 .dp-dark .dp-led.blinking { color: #ff6b6b; }
 
 
+
+/* ============================================================
+   ULTRA-COMPACT view: one line per card -> Name - Size [serial] [pill]
+   .ultra-mode is applied on top of .compact-mode; these rules follow the
+   compact rules in source order so they win at equal specificity.
+   ============================================================ */
+.dp-ultra-line { display: none; }
+.ultra-mode .dp-head-row,
+.ultra-mode .dp-usage-row,
+.ultra-mode .dp-detail,
+.ultra-mode .dp-main,
+.ultra-mode .dp-parts,
+.ultra-mode .dp-drive-notes { display: none !important; }
+
+.ultra-mode .dp-ultra-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 1px 2px;
+}
+.ultra-mode .dp-slot { height: 42px !important; }
+.ultra-mode .dp-slot:has(.dp-card) { height: auto !important; min-height: 0 !important; }
+.ultra-mode .dp-card { padding-top: 6px !important; padding-bottom: 6px !important; }
+
+.dp-ultra-name {
+    font-weight: 800;
+    font-size: 1.45rem;
+    color: #3f4a5a;
+    white-space: nowrap;
+    flex: 0 0 auto;            /* full name by default -> column grows to the widest card */
+}
+.dp-ultra-sep { color: #9aa3ad; font-weight: 600; flex: 0 0 auto; }
+.dp-ultra-size {
+    font-weight: 750;
+    font-size: 1.5rem;
+    color: #059669;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+.dp-ultra-serial {
+    margin-left: auto;                 /* push the serial + pill to the right edge */
+    font-family: monospace;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 1.5px;
+    color: #c40000;
+    background: #ffffff;
+    border: 1px solid #e3b7b7;
+    border-radius: 5px;
+    padding: 1px 9px;
+    flex: 0 0 auto;
+}
+.ultra-mode .dp-ultra-line .dp-badge { flex: 0 0 auto; }
+
+/* dark skin */
+.dp-dark .dp-ultra-name { color: #e5e7eb; }
+.dp-dark .dp-ultra-sep { color: #8b9096; }
+.dp-dark .dp-ultra-serial { background: #26282c; border-color: #44474d; color: #ff6b6b; }
+
+/* Ultra-compact names: only truncate when the browser is iPad-narrow.
+   At wider widths the column grows to the widest full name (no ellipsis);
+   at narrow widths columns become flexible/wrapping and names ellipsize to fit. */
+@media (max-width: 860px) {
+    .ultra-mode .dp-layout-grid {
+        flex-wrap: wrap;
+        overflow-x: hidden;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .ultra-mode .dp-column {
+        width: auto !important;
+        flex: 1 1 300px !important;
+        min-width: 240px;
+        max-width: 540px;
+    }
+    .ultra-mode .dp-ultra-name {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
