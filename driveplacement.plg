@@ -2,10 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.11.09">
+<!ENTITY version "2026.11.11">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
+<!ENTITY cache "/boot/config/plugins/&name;/&version;">
+<!ENTITY src "https://raw.githubusercontent.com/&github;/main">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -16,6 +18,10 @@
         min="6.12.0">
 
 <CHANGES>
+
+###2026.11.11
+- Installs without internet: plugin files are kept on the flash drive, so the plugin loads at boot even when GitHub can't be reached.
+- Updates now take effect immediately, without a reboot.
 
 ###2026.11.09
 - New Ultra-Compact view: a one-line-per-drive density (name - size [serial] [badge]), chosen from a Standard / Compact / Ultra-Compact selector in the toolbar.
@@ -42,10 +48,10 @@
 ###2026.04.04
 - Notes icon in Compact Mode. CSS tweaks.
 
-###2026.04.03a 
+###2026.04.03a
 - Added compact mode.
 
-###2026.04.03 
+###2026.04.03
 - Added per drive notes.
 
 ###2026.04.01b
@@ -60,76 +66,56 @@
 
 </CHANGES>
 
-<FILE Name="&plugdir;/DrivePlacement.page">
-  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.page</URL>
-</FILE>
-
-<FILE Name="&plugdir;/DrivePlacement.php">
-  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.php</URL>
-</FILE>
-
-<FILE Name="&plugdir;/DrivePlacement.css">
-  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.css</URL>
-</FILE>
-
-<FILE Name="&plugdir;/DrivePlacement.js">
-  <URL>https://raw.githubusercontent.com/&github;/main/DrivePlacement.js</URL>
-</FILE>
-
-<FILE Name="&plugdir;/save.php">
-  <URL>https://raw.githubusercontent.com/&github;/main/save.php</URL>
-</FILE>
-
-<FILE Name="&plugdir;/identify.php">
-  <URL>https://raw.githubusercontent.com/&github;/main/identify.php</URL>
-</FILE>
-
-<FILE Name="&plugdir;/icons/hdd.png">
-  <URL>https://raw.githubusercontent.com/&github;/main/icons/hdd.png</URL>
-</FILE>
-
-<FILE Name="&plugdir;/icons/ssd.png">
-  <URL>https://raw.githubusercontent.com/&github;/main/icons/ssd.png</URL>
-</FILE>
-
-<FILE Name="&plugdir;/icons/nvme.png">
-  <URL>https://raw.githubusercontent.com/&github;/main/icons/nvme.png</URL>
-</FILE>
-
-<FILE Name="&plugdir;/icons/usb.png">
-  <URL>https://raw.githubusercontent.com/&github;/main/icons/usb.png</URL>
-</FILE>
-
-
-<FILE Name="&plugdir;/README.md">
-  <URL>https://raw.githubusercontent.com/&github;/main/description.txt</URL>
-</FILE>
-
-<FILE Name="&plugdir;/&name;.png">
-  <URL>https://raw.githubusercontent.com/&github;/main/icon.png</URL>
-</FILE>
-
-
+<!--
+  OFFLINE-SAFE INSTALL
+  Unraid re-runs this file at EVERY boot. Each file below is saved on the flash
+  drive in a folder named after the version (&cache;). Unraid skips a download
+  when the file already exists, so after the first install a boot needs no
+  internet. A new version uses a new folder, so updates always get fresh files.
+  The files are then copied into the RAM plugin folder by the script further down.
+-->
+<FILE Name="&cache;/DrivePlacement.page"><URL>&src;/DrivePlacement.page</URL></FILE>
+<FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL></FILE>
+<FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL></FILE>
+<FILE Name="&cache;/DrivePlacement.js"><URL>&src;/DrivePlacement.js</URL></FILE>
+<FILE Name="&cache;/save.php"><URL>&src;/save.php</URL></FILE>
+<FILE Name="&cache;/identify.php"><URL>&src;/identify.php</URL></FILE>
+<FILE Name="&cache;/icons/hdd.png"><URL>&src;/icons/hdd.png</URL></FILE>
+<FILE Name="&cache;/icons/ssd.png"><URL>&src;/icons/ssd.png</URL></FILE>
+<FILE Name="&cache;/icons/nvme.png"><URL>&src;/icons/nvme.png</URL></FILE>
+<FILE Name="&cache;/icons/usb.png"><URL>&src;/icons/usb.png</URL></FILE>
+<FILE Name="&cache;/README.md"><URL>&src;/description.txt</URL></FILE>
+<FILE Name="&cache;/&name;.png"><URL>&src;/icon.png</URL></FILE>
 
 <FILE Run="/bin/bash">
 <INLINE>
 <![CDATA[
 NAME="driveplacement"
+VERSION="]]>&version;<![CDATA["
 PLUGDIR="/usr/local/emhttp/plugins/$NAME"
 CONF="/boot/config/plugins/$NAME"
+CACHE="$CONF/$VERSION"
 
-# Create directories
-mkdir -p "$PLUGDIR/icons"
-mkdir -p "$CONF"
+# Lay down a clean copy of this version from the flash cache
+rm -rf "$PLUGDIR"
+mkdir -p "$PLUGDIR"
+cp -r "$CACHE"/. "$PLUGDIR"/
 
-# Set permissions
+# Remove cached files from older versions (keeps layout.json and other settings)
+for d in "$CONF"/*/; do
+  v=$(basename "$d")
+  case "$v" in
+    20[0-9][0-9].[0-9][0-9].[0-9][0-9]*) [ "$v" != "$VERSION" ] && rm -rf "$d" ;;
+  esac
+done
+
 chown -R root:root "$PLUGDIR"
 chmod -R 755 "$PLUGDIR"
 
 echo ""
 echo "----------------------------------------------------"
 echo " Drive Placement has been installed."
-echo " Version: 2026.11.06"
+echo " Version: $VERSION"
 echo "----------------------------------------------------"
 echo ""
 ]]>
@@ -141,9 +127,11 @@ echo ""
 <![CDATA[
 NAME="driveplacement"
 PLUGDIR="/usr/local/emhttp/plugins/$NAME"
+CONF="/boot/config/plugins/$NAME"
 
-# Remove plugin files but leave the config directory intact to save user layouts
+# Remove plugin files and the cached copies, but keep the user's layout
 rm -rf "$PLUGDIR"
+for d in "$CONF"/20[0-9][0-9].[0-9][0-9].[0-9][0-9]*/; do [ -d "$d" ] && rm -rf "$d"; done
 
 echo ""
 echo "----------------------------------------------------------------------------"
