@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const addColBtn = document.getElementById('dp-add-column');
     const saveBtn = document.getElementById('dp-save-layout');
     const modeText = document.getElementById('dp-mode-text');
+
+    // Escape text before it goes into innerHTML or an attribute value.
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
+        c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     
     let isLocked = true;
     document.body.classList.add('locked');
@@ -247,16 +251,16 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (usedPct !== null) {
                 const sizeTxt = drive.size ? ' of ' + drive.size : '';
                 const freePct = 100 - usedPct;
-                const barTtl = `${usedPct}% used${sizeTxt}` + (drive.freeLabel ? `  ·  ${drive.freeLabel} free (${freePct}% free)` : '');
-                const freeTtl = drive.freeLabel ? `Free space: ${drive.freeLabel} (${freePct}% free)${sizeTxt}` : 'Free space';
-                const freeTxt = drive.freeLabel ? `Free: ${drive.freeLabel} - ${freePct}%` : `${freePct}% free`;
+                const barTtl = `${usedPct}% used${esc(sizeTxt)}` + (drive.freeLabel ? `  ·  ${esc(drive.freeLabel)} free (${freePct}% free)` : '');
+                const freeTtl = drive.freeLabel ? `Free space: ${esc(drive.freeLabel)} (${freePct}% free)${esc(sizeTxt)}` : 'Free space';
+                const freeTxt = drive.freeLabel ? `Free: ${esc(drive.freeLabel)} - ${freePct}%` : `${freePct}% free`;
                 usageHtml = `<span class="dp-usage" title="${barTtl}"><span class="dp-usage-fill" style="width:${usedPct}%"></span></span>` +
                             `<span class="dp-free" title="${freeTtl}">${freeTxt}</span>`;
             }
 
             // --- filesystem format label (xfs / ntfs / zfs ...) shown under the drive size ---
             const fmt = (drive.format || "").trim();
-            const fmtHtml = fmt ? `<span class="dp-fmt" title="Filesystem: ${fmt.toUpperCase()}">${fmt}</span>` : "";
+            const fmtHtml = fmt ? `<span class="dp-fmt" title="Filesystem: ${esc(fmt.toUpperCase())}">${esc(fmt)}</span>` : "";
 
             // --- per-partition sub-lines (UD drives with more than one partition) ---
             let partsHtml = "";
@@ -264,18 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 const rows = partitions.map(p => {
                     const pName = p.name || "part";
                     const pFmt = (p.format || "").trim();
-                    const pFmtHtml = pFmt ? `<span class="dp-part-fmt">${pFmt}</span>` : "";
+                    const pFmtHtml = pFmt ? `<span class="dp-part-fmt">${esc(pFmt)}</span>` : "";
                     let pUse;
                     if (p.mounted === false) {
                         pUse = `<span class="dp-notmounted dp-part-nm" title="Partition is not mounted">Not mounted</span>`;
                     } else if (p.usedPct !== null && p.usedPct !== undefined) {
-                        const pTtl = `${p.usedPct}% used` + (p.freeLabel ? `  ·  ${p.freeLabel} free` : '');
+                        const pTtl = `${p.usedPct}% used` + (p.freeLabel ? `  ·  ${esc(p.freeLabel)} free` : '');
                         pUse = `<span class="dp-usage" title="${pTtl}"><span class="dp-usage-fill" style="width:${p.usedPct}%"></span></span>` +
-                               (p.freeLabel ? `<span class="dp-free">${p.freeLabel}</span>` : '');
+                               (p.freeLabel ? `<span class="dp-free">${esc(p.freeLabel)}</span>` : '');
                     } else {
                         pUse = "";
                     }
-                    return `<div class="dp-part"><span class="dp-part-name" title="${pName}">${pName}</span>${pFmtHtml}${pUse}</div>`;
+                    return `<div class="dp-part"><span class="dp-part-name" title="${esc(pName)}">${esc(pName)}</span>${pFmtHtml}${pUse}</div>`;
                 }).join('');
                 partsHtml = `<div class="dp-parts">${rows}</div>`;
             }
@@ -286,12 +290,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const notesIconHtml = notesText ? `
                 <div class="dp-notes-wrapper">
                     <i class="fa fa-info-circle dp-notes-icon"></i>
-                    <div class="dp-notes-tooltip">${notesText}</div>
+                    <div class="dp-notes-tooltip">${esc(notesText)}</div>
                 </div>
             ` : "";
 
             // Constructs the standard 2-line notes (used in normal mode)
-            const standardNotesHtml = notesText ? `<div class="dp-drive-notes">${notesText}</div>` : "";
+            const standardNotesHtml = notesText ? `<div class="dp-drive-notes">${esc(notesText)}</div>` : "";
 
             const badgeTitles = { array: 'Array data disk', parity: 'Parity disk', pool: 'Cache pool device', unassigned: 'Unassigned device (UD)', flash: 'unRAID boot flash' };
             const badgeTitle = badgeTitles[category] || '';
@@ -302,39 +306,39 @@ document.addEventListener("DOMContentLoaded", () => {
             // between the head row and the main line, and is shown only when "Compact" is unchecked.
             card.innerHTML = `
                 <div class="dp-ultra-line">
-                    <span class="dp-ultra-name">${displayName}</span>
+                    <span class="dp-ultra-name">${esc(displayName)}</span>
                     <span class="dp-ultra-sep">-</span>
-                    <span class="dp-ultra-size">${drive.size || ""}</span>
-                    <span class="dp-ultra-serial" title="${serialTitle}">${last4.toUpperCase()}</span>
-                    <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${typeLabel}</div>
+                    <span class="dp-ultra-size">${esc(drive.size || "")}</span>
+                    <span class="dp-ultra-serial" title="${esc(serialTitle)}">${esc(last4.toUpperCase())}</span>
+                    <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${esc(typeLabel)}</div>
                 </div>
                 <div class="dp-head-row">
-                    <span class="dp-drive-name">${displayName}</span>
+                    <span class="dp-drive-name">${esc(displayName)}</span>
                     ${tempHtml}
                     <div class="dp-badge-container">
                         ${notesIconHtml}
-                        <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${typeLabel}</div>
+                        <div class="dp-badge ${badgeClass}" title="${badgeTitle}">${esc(typeLabel)}</div>
                     </div>
                 </div>
                 ${usageHtml ? `<div class="dp-usage-row">${usageHtml}</div>` : ""}
 
                 <div class="dp-detail">
-                    <div class="dp-drive-model">${drive.model || "Unknown"}</div>
-                    <div class="dp-drive-serial">${rawSerial}</div>
+                    <div class="dp-drive-model">${esc(drive.model || "Unknown")}</div>
+                    <div class="dp-drive-serial">${esc(rawSerial)}</div>
                 </div>
 
                 <div class="dp-main">
                     <div class="dp-drive-size">
                         ${iconHtml}
                         <span class="dp-size-stack">
-                            <span class="dp-size-val">${drive.size || "Unknown"}</span>
+                            <span class="dp-size-val">${esc(drive.size || "Unknown")}</span>
                             ${fmtHtml}
                         </span>
                     </div>
 
                     <div class="dp-serial-row">
-                        <button class="dp-led" title="Identify this drive - blink its activity LED" data-serial="${rawSerial}">${bulbSvg}</button>
-                        <div class="dp-serial-large" title="${serialTitle}">${last4.toUpperCase()}</div>
+                        <button class="dp-led" title="Identify this drive - blink its activity LED" data-serial="${esc(rawSerial)}">${bulbSvg}</button>
+                        <div class="dp-serial-large" title="${esc(serialTitle)}">${esc(last4.toUpperCase())}</div>
                         <div class="dp-action-group">
                             <button class="dp-action-btn dp-btn-delete" title="Remove Slot & Return Drive">X</button>
                             <button class="dp-action-btn dp-btn-edit" title="Edit Drive">✏️</button>
@@ -404,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.innerHTML = `
                 <div class="dp-edit-form">
                     <label style="font-size:1.2rem; font-weight:bold;">Custom Name:</label>
-                    <input type="text" class="dp-edit-name" value="${currentName}">
+                    <input type="text" class="dp-edit-name" value="${esc(currentName)}">
 
                     <label style="font-size:1.2rem; font-weight:bold; margin-top:5px;">Media Type:</label>
                     <select class="dp-edit-type">
@@ -416,12 +420,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     </select>
 
                     <label style="font-size:1.2rem; font-weight:bold; margin-top:5px;">Notes:</label>
-                    <input type="text" class="dp-edit-notes" value="${currentNotes}" placeholder="Optional notes...">
+                    <input type="text" class="dp-edit-notes" value="${esc(currentNotes)}" placeholder="Optional notes...">
 
                     <label style="font-size:1.2rem; font-weight:bold; margin-top:5px;">Card Background:</label>
                     <div style="display:flex; gap:6px; align-items:center;">
-                        <input type="color" class="dp-edit-color-pick" value="${currentColor || '#ffffff'}" style="width:38px; height:30px; padding:0; border:1px solid #cbd5e1; border-radius:4px;">
-                        <input type="text" class="dp-edit-color-hex" value="${currentColor}" placeholder="default (blank)" spellcheck="false" style="flex:1;">
+                        <input type="color" class="dp-edit-color-pick" value="${esc(currentColor || '#ffffff')}" style="width:38px; height:30px; padding:0; border:1px solid #cbd5e1; border-radius:4px;">
+                        <input type="text" class="dp-edit-color-hex" value="${esc(currentColor)}" placeholder="default (blank)" spellcheck="false" style="flex:1;">
                         <button type="button" class="dp-edit-color-clear dp-btn dp-btn-secondary" style="padding:4px 8px; font-size:0.85rem;">Default</button>
                     </div>
 
@@ -454,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             col.innerHTML = `
                 <div class="dp-column-header">
-                    <input type="text" class="dp-column-title" value="${titleText}">
+                    <input type="text" class="dp-column-title" value="${esc(titleText)}">
                     <div class="dp-column-actions">
                         <button class="dp-col-btn dp-add-row" title="Add Slot">+ SLOT</button>
                         <button class="dp-col-btn dp-del-col" title="Delete Column">🗑️</button>
@@ -683,8 +687,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Not a clone of the UI: a grouped inventory report, sans-serif, letter/A4 sized,
         // color used only for hierarchy (title bar, section headers, category dots, red issues).
         function exportPdf() {
-            const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g,
-                c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
             const CAT_DOT = { array: '#22c55e', parity: '#8b5cf6', pool: '#f59e0b', unassigned: '#9ca3af', flash: '#0ea5e9' };
             const CAT_NAME = { array: 'Data', parity: 'Parity', pool: 'Pool', unassigned: 'UD', flash: 'Flash' };
             const ISSUE = '#dc2626';
