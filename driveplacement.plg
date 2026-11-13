@@ -7,7 +7,7 @@
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY cache "/boot/config/plugins/&name;/&version;">
-<!ENTITY src "https://raw.githubusercontent.com/&github;/main">
+<!ENTITY src "https://raw.githubusercontent.com/&github;/&version;">
 ]>
 <PLUGIN name="&name;"
         author="&author;"
@@ -74,18 +74,18 @@
   internet. A new version uses a new folder, so updates always get fresh files.
   The files are then copied into the RAM plugin folder by the script further down.
 -->
-<FILE Name="&cache;/DrivePlacement.page"><URL>&src;/DrivePlacement.page</URL></FILE>
-<FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL></FILE>
-<FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL></FILE>
-<FILE Name="&cache;/DrivePlacement.js"><URL>&src;/DrivePlacement.js</URL></FILE>
-<FILE Name="&cache;/save.php"><URL>&src;/save.php</URL></FILE>
-<FILE Name="&cache;/identify.php"><URL>&src;/identify.php</URL></FILE>
-<FILE Name="&cache;/icons/hdd.png"><URL>&src;/icons/hdd.png</URL></FILE>
-<FILE Name="&cache;/icons/ssd.png"><URL>&src;/icons/ssd.png</URL></FILE>
-<FILE Name="&cache;/icons/nvme.png"><URL>&src;/icons/nvme.png</URL></FILE>
-<FILE Name="&cache;/icons/usb.png"><URL>&src;/icons/usb.png</URL></FILE>
-<FILE Name="&cache;/README.md"><URL>&src;/description.txt</URL></FILE>
-<FILE Name="&cache;/&name;.png"><URL>&src;/icon.png</URL></FILE>
+<FILE Name="&cache;/DrivePlacement.page"><URL>&src;/DrivePlacement.page</URL><MD5>2de530a99ad249de2f08cbfaf7271c0e</MD5></FILE>
+<FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL><MD5>80990f3ca6cfd986d4950456437929fc</MD5></FILE>
+<FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL><MD5>434f5d3e058af368d352b38b54127e42</MD5></FILE>
+<FILE Name="&cache;/DrivePlacement.js"><URL>&src;/DrivePlacement.js</URL><MD5>14cdf1879d7b419e9b8fd8b57321b62d</MD5></FILE>
+<FILE Name="&cache;/save.php"><URL>&src;/save.php</URL><MD5>540fd64556c146176abdbba9170a6811</MD5></FILE>
+<FILE Name="&cache;/identify.php"><URL>&src;/identify.php</URL><MD5>e54a34f1ae0212c4484a14759fbbb8d5</MD5></FILE>
+<FILE Name="&cache;/icons/hdd.png"><URL>&src;/icons/hdd.png</URL><MD5>e2b3693ba5490ebd61266ad4e9dadf93</MD5></FILE>
+<FILE Name="&cache;/icons/ssd.png"><URL>&src;/icons/ssd.png</URL><MD5>0cc29b68945714dabcdbc67d8613a727</MD5></FILE>
+<FILE Name="&cache;/icons/nvme.png"><URL>&src;/icons/nvme.png</URL><MD5>ea2e05a4f10629e7e21eade84c4e663d</MD5></FILE>
+<FILE Name="&cache;/icons/usb.png"><URL>&src;/icons/usb.png</URL><MD5>f0994ba63204e8608338a80ce0cdfe2f</MD5></FILE>
+<FILE Name="&cache;/README.md"><URL>&src;/description.txt</URL><MD5>395a73fcba24ed0c595a09f1a478a14c</MD5></FILE>
+<FILE Name="&cache;/&name;.png"><URL>&src;/icon.png</URL><MD5>b2dc5e9ec88bf634fd4682efa5c6f221</MD5></FILE>
 
 <FILE Run="/bin/bash">
 <INLINE>
