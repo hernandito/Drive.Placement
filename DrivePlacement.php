@@ -102,7 +102,7 @@ foreach ($disks as $diskName => $data) {
 }
 
 // Pull every block device WITH its partitions so UD cards can show mount state, usage and filesystem.
-$lsblk_output = shell_exec('lsblk -n -P -b -o NAME,PKNAME,TYPE,MODEL,SERIAL,SIZE,ROTA,FSTYPE,LABEL,MOUNTPOINT,FSSIZE,FSUSED,FSAVAIL 2>/dev/null');
+$lsblk_output = shell_exec('lsblk -n -P -b -o NAME,PKNAME,TYPE,MODEL,SERIAL,WWN,SIZE,ROTA,FSTYPE,LABEL,MOUNTPOINT,FSSIZE,FSUSED,FSAVAIL 2>/dev/null');
 $allRows = [];
 foreach (explode("\n", trim((string)$lsblk_output)) as $line) {
     if ($line === '') continue;
@@ -154,8 +154,14 @@ foreach ($allRows as $row) {
         $mounted = true;   // card itself isn't "unmounted"; each partition shows its own state
     }
 
+    // Stable card id: prefer the hardware serial, then WWN, and only fall back to the
+    // volatile /dev name when neither exists. Mixing $devName into this id used to make
+    // UD card settings (notes, colour, name, placement) vanish whenever the kernel
+    // reassigned sdX across a reboot or USB re-scan.
+    $stableId = !empty($row['SERIAL']) ? $row['SERIAL'] : (!empty($row['WWN']) ? $row['WWN'] : $devName);
+
     $driveData[] = [
-        'id' => "ud_" . md5($serial . $devName),
+        'id' => "ud_" . md5($stableId),
         'name' => 'Mount: /dev/' . strtolower($devName),
         'model' => !empty($row['MODEL']) ? $row['MODEL'] : 'Unknown',
         'serial' => $serial,
