@@ -1,6 +1,6 @@
 .dp-wrapper {
     padding: 20px;
-    background: linear-gradient(135deg, #ebecec 0%, #f8fafc 100%);
+    background: #f8fafc;
     min-height: 800px;
     color: #1e293b;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -872,7 +872,7 @@
 /* ============================================================
    Dark skin (unRAID black / gray themes)  -> body.dp-dark
    ============================================================ */
-.dp-dark .dp-wrapper { background: linear-gradient(135deg, #1b1c1f 0%, #212327 100%); color: #e5e7eb; }
+.dp-dark .dp-wrapper { background: #1e2024; color: #e5e7eb; }
 .dp-dark .glass-panel { background: rgba(40,42,46,0.72); border-color: #3a3d42; }
 .dp-dark .dp-title { color: #e8eaed; }
 .dp-dark .dp-subtitle { color: #9aa3ad; }

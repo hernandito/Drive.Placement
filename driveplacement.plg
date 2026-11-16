@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.11.16">
+<!ENTITY version "2026.11.17">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
@@ -18,6 +18,9 @@
         min="6.12.0">
 
 <CHANGES>
+
+###2026.11.17
+- Removed the diagonal background gradient on the main page; the container now uses a flat background in both the light and dark skins.
 
 ###2026.11.16
 - Fix: Unassigned Devices (UD) cards now keep their notes, color, name, and placement across reboots, re-scans, and plugin updates. Their saved settings were previously keyed partly on the /dev/sdX name, which the kernel can reassign; UD cards are now identified by a stable serial (then WWN). Note: existing UD cards need to be set once more after this update, then they persist.
@@ -82,7 +85,7 @@
 -->
 <FILE Name="&cache;/DrivePlacement.page"><URL>&src;/DrivePlacement.page</URL><MD5>2de530a99ad249de2f08cbfaf7271c0e</MD5></FILE>
 <FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL><MD5>547231781263a4056cb8b5132f84a83a</MD5></FILE>
-<FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL><MD5>434f5d3e058af368d352b38b54127e42</MD5></FILE>
+<FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL><MD5>506b9f5b615d9d75c5b97e64c439468b</MD5></FILE>
 <FILE Name="&cache;/DrivePlacement.js"><URL>&src;/DrivePlacement.js</URL><MD5>10c8ec3f045038e56e8e2754c877a4e2</MD5></FILE>
 <FILE Name="&cache;/save.php"><URL>&src;/save.php</URL><MD5>540fd64556c146176abdbba9170a6811</MD5></FILE>
 <FILE Name="&cache;/identify.php"><URL>&src;/identify.php</URL><MD5>e54a34f1ae0212c4484a14759fbbb8d5</MD5></FILE>
