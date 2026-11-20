@@ -1,43 +1,71 @@
-Drive Placement
-A simple, drag-and-drop map of your server's physical drive layout.
+=============================================================
+ WHERE TO POST
+=============================================================
+forums.unraid.net  ->  Application Support  ->  start a New Topic
+(Application Support is the subforum CA links to as a plugin's "Support" thread.)
+
+Suggested thread title:
+[PLUGIN] Drive Placement - a simple drag-and-drop map of your drive layout
+
+HOW TO ADD THE IMAGES: the forum editor auto-embeds an image when a raw
+image URL sits on its own line (blank line above and below it). The URLs
+below are already placed that way - just paste the whole post. Make the
+ALL-CAPS section labels bold with the editor's B button after pasting.
+
+
+=============================================================
+ POST BODY (paste everything below this line)
+=============================================================
+
+Drive Placement maps your unRAID drives onto a clean picture of your actual case, so the dashboard matches what you see when you open up the server. Each drive sits in a column that represents its real cage, stack, or the motherboard - so you always know which physical bay any drive lives in.
 
 https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot.png
 
-Drive Placement maps your unRAID drives onto a clean visual layout of your actual case, so the dashboard matches what you see when you open up the server. Each drive sits in a column that represents its real cage, stack, or the motherboard - so you always know which physical bay any drive lives in.
+Setup takes about a minute. There is nothing to configure: your drives show up automatically in an Unplaced pool, you drag them into columns that match your hardware, and click Save. No tray definitions, no per-slot forms, no wizard.
 
-Setup takes about a minute. There's nothing to configure: your drives show up automatically in an Unplaced pool, you drag them into columns that match your hardware, and click Save. No tray definitions, no per-slot forms, no wizard.
-
-Every drive card shows, at a glance:
+AT A GLANCE, EVERY DRIVE CARD SHOWS:
 - Temperature (color-coded) and a "Zzz" marker when a drive is spun down
 - Usage bar, free space, size, and filesystem (xfs, btrfs, zfs, ntfs, fat, exfat ...)
 - The last four of the serial number - the same short tag you label your physical drives with
 - Media type and a category badge (Array, Parity, Pool, Unassigned, Flash)
 - A red card for any drive reporting an issue, so problems stand out
 
-More of what's inside:
-- Unassigned Devices - full temperature, usage, and free-space readout, a clear "Not mounted" flag, and per-partition sub-lines for multi-partition drives
+MORE OF WHAT'S INSIDE:
+- Unassigned Devices - full temperature, usage and free-space readout, a clear "Not mounted" flag, and per-partition sub-lines for multi-partition drives
 - Identify a drive - a button blinks the drive's own activity LED so you can find it in the bay
-- Compact and full views, light/dark skin aware, with per-category and per-card background colors
-- Custom names and notes on any drive
+- Standard, Compact and Ultra-Compact views, light/dark skin aware, with per-category and per-card background colors
+- Custom names, media types, and notes on any drive
 - Printable PDF report of your whole layout
 - Layouts saved to your flash drive - they survive reboots and plugin updates
 
 Unlocked editing - drag drives into place, rename, color, and add notes:
+
 https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-unlocked.png
 
 Compact view for dense layouts:
+
 https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-compact.png
 
+Ultra-Compact view, for when you just want the map:
+
+https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-ultra.png
+
+Set a custom name, media type, color, and notes on any drive:
+
+https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-editable.png
+
 Clean, printable PDF report:
+
 https://raw.githubusercontent.com/hernandito/Drive.Placement/main/screenshot-pdf.png
 
-How is this different from Disk Location?
+HOW IS THIS DIFFERENT FROM DISK LOCATION?
 The excellent Disk Location plugin by olehj (https://forums.unraid.net/topic/77302-plugin-disk-location/) is powerful and deeply feature-rich. Drive Placement takes a different tack: dead-simple setup and a clean, easy-to-read design. Set it up in under a minute - no tray/row/column configuration - and read your whole array at a glance. If you want maximum configurability, Disk Location is a great choice. If you want a drive map that takes a minute to set up and is effortless to read, give Drive Placement a try.
 
-Install
-Available in Community Applications - search for "Drive Placement". Or install manually via Plugins - Install Plugin:
+INSTALL
+Available in Community Applications - search for "Drive Placement". Or install manually via Plugins -> Install Plugin:
 https://raw.githubusercontent.com/hernandito/Drive.Placement/main/driveplacement.plg
-The dashboard appears under Settings - Utilities - Drive Placement.
+
+The dashboard appears under Settings -> Utilities -> Drive Placement.
 
 Source, issues, and requests: https://github.com/hernandito/Drive.Placement
 
