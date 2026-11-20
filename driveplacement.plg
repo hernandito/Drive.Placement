@@ -18,6 +18,8 @@
         min="6.12.0">
 
 <CHANGES>
+###2026.11.20
+- Summarized description for better display.
 
 ###2026.11.17
 - Removed the diagonal background gradient on the main page; the container now uses a flat background in both the light and dark skins.
