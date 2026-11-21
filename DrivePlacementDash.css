@@ -1,0 +1,99 @@
+/* Drive Placement - Dashboard tile styles.
+   Chips sit in horizontal columns and shed detail as width tightens; the
+   floor is a colored square, with the pop-over (built by DrivePlacementDash.js)
+   supplying full detail. Light + dark skin aware (.dp-dash-dark set server-side). */
+
+.dp-dash { font-size: 12px; line-height: 1.3; }
+
+/* ---- summary line ---- */
+.dp-dash-summary {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+    margin: 0 0 8px 0; padding-bottom: 6px;
+    border-bottom: 1px solid rgba(128,128,128,0.3);
+}
+.dp-ds-item { font-size: 11px; }
+.dp-ds-active { color: #3b9c2d; font-weight: 600; }
+.dp-ds-sleep  { color: #808080; font-weight: 600; }
+.dp-ds-issue  { color: #c0392b; font-weight: 600; }
+.dp-ds-hot    { color: inherit; opacity: 0.8; }
+.dp-dash-open { margin-left: auto; font-size: 11px; text-decoration: none; opacity: 0.85; }
+.dp-dash-open:hover { text-decoration: underline; }
+
+/* ---- the map ---- */
+.dp-dash-grid {
+    display: flex; flex-wrap: nowrap; align-items: flex-start;
+    gap: 10px; overflow-x: auto;
+}
+.dp-dash-col { flex: 1 1 0; min-width: 0; }
+.dp-dash-colhead {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px;
+    opacity: 0.6; margin-bottom: 5px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+}
+.dp-dash-colnum { display: none; }
+.dp-dash-chips { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---- chip ---- */
+.dp-dchip {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--chip-bg, #fff); color: var(--chip-fg, #1a1a1a);
+    border: 1px solid rgba(128,128,128,0.35); border-radius: 4px;
+    padding: 3px 7px; min-width: 0; cursor: default;
+    transition: box-shadow .1s ease;
+}
+.dp-dchip:hover, .dp-dchip:focus { box-shadow: 0 0 0 2px rgba(80,120,200,0.55); outline: none; }
+.dp-dc-serial { font-weight: 600; letter-spacing: 0.3px; white-space: nowrap; }
+.dp-dc-temp   { font-size: 11px; opacity: 0.85; margin-left: auto; white-space: nowrap; }
+.dp-dc-cat    { font-size: 10px; opacity: 0.7; white-space: nowrap; }
+.dp-dchip.dp-issue {
+    background: #e24b4a !important; color: #fff !important;
+    border-color: #a32d2d;
+}
+
+/* ---- responsive levels (class set by JS on .dp-dash) ---- */
+.dp-dash.dp-lvl-2 .dp-dc-cat { display: none; }
+.dp-dash.dp-lvl-3 .dp-dc-cat,
+.dp-dash.dp-lvl-3 .dp-dc-temp { display: none; }
+.dp-dash.dp-lvl-3 .dp-dchip { justify-content: center; }
+.dp-dash.dp-lvl-3 .dp-dc-serial { margin: 0 auto; }
+
+/* level 4: colored square, no text, pop-over carries the info */
+.dp-dash.dp-lvl-4 .dp-dc-serial,
+.dp-dash.dp-lvl-4 .dp-dc-temp,
+.dp-dash.dp-lvl-4 .dp-dc-cat { display: none; }
+.dp-dash.dp-lvl-4 .dp-dchip {
+    width: 18px; height: 18px; padding: 0; border-radius: 3px;
+    justify-content: center;
+}
+.dp-dash.dp-lvl-4 .dp-dash-chips { flex-flow: row wrap; gap: 4px; }
+.dp-dash.dp-lvl-4 .dp-dash-colname { display: none; }
+.dp-dash.dp-lvl-4 .dp-dash-colnum { display: inline; }
+
+/* ---- floating pop-over card ---- */
+.dp-dash-pop {
+    position: fixed; z-index: 9999; width: 190px;
+    background: #fff; color: #1a1a1a;
+    border: 1px solid rgba(100,100,100,0.5); border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    padding: 10px 12px; font-size: 12px; line-height: 1.35;
+    pointer-events: none;
+}
+.dp-dash-pop.dp-pop-pinned { pointer-events: auto; }
+.dp-dash-pop.dp-dash-dark { background: #262b33; color: #e6e6e6; border-color: rgba(255,255,255,0.18); }
+.dp-pop-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.dp-pop-name { font-weight: 600; font-size: 13px; }
+.dp-pop-temp { margin-left: auto; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 9px; background: rgba(120,170,120,0.25); }
+.dp-pop-temp.warm { background: rgba(240,170,60,0.3); }
+.dp-pop-temp.hot  { background: rgba(225,80,75,0.35); }
+.dp-pop-temp.sleep{ background: rgba(140,140,140,0.3); }
+.dp-pop-size { font-size: 20px; font-weight: 700; color: #059669; line-height: 1.1; margin-top: 2px; }
+.dp-pop-serial { font-size: 16px; font-weight: 700; color: #bf0000; letter-spacing: 1px; margin-top: 1px; }
+.dp-pop-sub { display: flex; justify-content: space-between; opacity: 0.75; font-size: 11px; margin: 4px 0 7px; }
+.dp-pop-bar { height: 7px; border-radius: 4px; background: rgba(128,128,128,0.25); overflow: hidden; margin-bottom: 5px; }
+.dp-pop-bar > span { display: block; height: 100%; background: #639922; }
+.dp-pop-free { display: flex; justify-content: space-between; font-size: 11px; }
+.dp-pop-free b { font-weight: 600; }
+.dp-pop-cat { font-size: 10px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+.dp-pop-close { pointer-events: auto; cursor: pointer; border: none; background: transparent; font-size: 15px; line-height: 1; opacity: 0.5; padding: 0 0 0 4px; color: inherit; }
+.dp-pop-close:hover { opacity: 1; }
+.dp-pop-nm { opacity: 0.7; font-style: italic; }

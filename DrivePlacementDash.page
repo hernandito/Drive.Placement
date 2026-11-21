@@ -1,0 +1,163 @@
+Menu="Dashboard:0"
+Cond="!file_exists('/boot/config/plugins/driveplacement/.dash-hidden')"
+---
+<?php
+/*
+ * Drive Placement - Dashboard tile.
+ *
+ * Renders a compact mini-map of the physical drive layout as a custom dashboard
+ * tile. Columns match the full page (from layout.json); chips are tinted by the
+ * same category/custom colors; a red chip flags an issue. Chips degrade with
+ * width (serial+temp+cat -> serial+temp -> serial -> colored square); the square
+ * is the floor, and the hover/tap pop-over supplies the full detail.
+ *
+ * Shown only when the user enables it on the Drive Placement page (the Cond above
+ * checks the .dash-hidden marker written by set-dash.php).
+ */
+
+define('DP_DATA_CACHE_TTL', 90); // don't re-probe smartctl on every dashboard poll
+require_once "/usr/local/emhttp/plugins/driveplacement/DrivePlacementData.php";
+
+// Index drives by id.
+$dpById = [];
+foreach ($driveData as $d) $dpById[$d['id']] = $d;
+
+$metadata       = (is_array($savedLayout) && isset($savedLayout['metadata']))       ? $savedLayout['metadata']       : [];
+$categoryColors = (is_array($savedLayout) && isset($savedLayout['categoryColors']))  ? $savedLayout['categoryColors']  : [];
+$catDefaults    = $dpDark
+    ? ['parity' => '#322c40', 'pool' => '#3a3326', 'unassigned' => '#30333a', 'flash' => '#26373d']
+    : ['parity' => '#eae6f9', 'pool' => '#fdf4e4', 'unassigned' => '#e9e9e9', 'flash' => '#dbf1f9'];
+$arrayBase      = $dpDark ? '#20242c' : '#ffffff'; // "array"/default drives have no category tint
+
+// Build the column model from the saved layout; fall back to one column of all drives.
+$columns = [];
+$placedIds = [];
+if (is_array($savedLayout) && !empty($savedLayout['columns'])) {
+    foreach ($savedLayout['columns'] as $col) {
+        $slots = isset($col['slots']) && is_array($col['slots']) ? $col['slots'] : [];
+        $drives = [];
+        foreach ($slots as $cid) {
+            if ($cid !== null && $cid !== '' && isset($dpById[$cid])) { $drives[] = $dpById[$cid]; $placedIds[$cid] = true; }
+        }
+        $columns[] = ['title' => (string)($col['title'] ?? ''), 'drives' => $drives];
+    }
+    // Any drives not placed yet go in a trailing "Unplaced" column.
+    $unplaced = [];
+    foreach ($driveData as $d) if (empty($placedIds[$d['id']])) $unplaced[] = $d;
+    if ($unplaced) $columns[] = ['title' => 'Unplaced', 'drives' => $unplaced];
+} else {
+    $columns[] = ['title' => 'Drives', 'drives' => $driveData];
+}
+
+// Pick a readable text color (dark or light) for a given chip background.
+function dp_contrastFg($hex) {
+    $hex = ltrim((string)$hex, '#');
+    if (strlen($hex) === 3) $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+    if (strlen($hex) !== 6) return '#1a1a1a';
+    $r = hexdec(substr($hex,0,2)); $g = hexdec(substr($hex,2,2)); $b = hexdec(substr($hex,4,2));
+    $lum = (0.299*$r + 0.587*$g + 0.114*$b) / 255;
+    return $lum > 0.6 ? '#1a1a1a' : '#f0f0f0';
+}
+
+// Resolve one drive into the chip + pop-over detail bundle.
+$dpDetail = [];           // id => detail object for the JS pop-over
+$nActive = 0; $nSleep = 0; $nIssue = 0; $hottest = null;
+function dp_resolve($d, $metadata, $categoryColors, $catDefaults, $arrayBase) {
+    $id   = $d['id'];
+    $meta = isset($metadata[$id]) && is_array($metadata[$id]) ? $metadata[$id] : [];
+    $cat  = dp_category($d['type'] ?? 'Data');
+
+    $name = isset($meta['name']) && $meta['name'] !== '' ? $meta['name'] : ($d['name'] ?? '');
+    $name = preg_replace('/^(disk)(\d+)$/i', 'Disk $2', $name);
+
+    $custom = isset($meta['color']) ? trim((string)$meta['color']) : '';
+    if ($custom !== '' && $custom[0] !== '#') $custom = '#' . $custom;
+    if (!preg_match('/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/', $custom)) $custom = '';
+    $color = $custom !== '' ? $custom : ($categoryColors[$cat] ?? ($catDefaults[$cat] ?? $arrayBase));
+
+    $serial = (string)($d['serial'] ?? '');
+    $last4  = strlen($serial) >= 4 ? substr($serial, -4) : $serial;
+
+    return [
+        'id'        => $id,
+        'name'      => $name,
+        'last4'     => strtoupper($last4),
+        'serial'    => $serial,
+        'model'     => $d['model'] ?? '',
+        'size'      => $d['size'] ?? '',
+        'format'    => $d['format'] ?? '',
+        'temp'      => $d['temp'],
+        'spundown'  => !empty($d['spundown']),
+        'health'    => $d['health'] ?? 'ok',
+        'usedPct'   => $d['usedPct'],
+        'freeLabel' => $d['freeLabel'],
+        'mounted'   => ($d['mounted'] ?? true),
+        'category'  => $cat,
+        'catLabel'  => dp_categoryLabel($cat),
+        'color'     => $color,
+        'fg'        => dp_contrastFg($color),
+    ];
+}
+
+$tileId = 'dp-dash-' . substr(md5('driveplacement-tile'), 0, 8);
+$colsHtml = '';
+$colNum = 0;
+foreach ($columns as $col) {
+    $colNum++;
+    $chips = '';
+    foreach ($col['drives'] as $d) {
+        $r = dp_resolve($d, $metadata, $categoryColors, $catDefaults, $arrayBase);
+        $dpDetail[$r['id']] = $r;
+
+        // summary tally
+        if ($r['health'] === 'issue') $nIssue++;
+        if ($r['spundown']) $nSleep++;
+        elseif ($r['temp'] !== null) { $nActive++; if ($hottest === null || $r['temp'] > $hottest) $hottest = $r['temp']; }
+
+        $tempTxt = $r['spundown'] ? 'Zzz' : ($r['temp'] !== null ? $r['temp'] . '&deg;' : '');
+        $issue   = $r['health'] === 'issue' ? ' dp-issue' : '';
+        $style   = ' style="--chip-bg:' . htmlspecialchars($r['color'], ENT_QUOTES) . ';--chip-fg:' . htmlspecialchars($r['fg'], ENT_QUOTES) . '"';
+        $chips  .= '<div class="dp-dchip' . $issue . '" data-id="' . htmlspecialchars($r['id'], ENT_QUOTES) . '" tabindex="0"' . $style . '>'
+                 .   '<span class="dp-dc-serial">' . htmlspecialchars($r['last4']) . '</span>'
+                 .   '<span class="dp-dc-temp">' . $tempTxt . '</span>'
+                 .   '<span class="dp-dc-cat">' . htmlspecialchars($r['catLabel']) . '</span>'
+                 . '</div>';
+    }
+    $colsHtml .= '<div class="dp-dash-col">'
+               .   '<div class="dp-dash-colhead">'
+               .     '<span class="dp-dash-colname">' . htmlspecialchars($col['title']) . '</span>'
+               .     '<span class="dp-dash-colnum">' . $colNum . '</span>'
+               .   '</div>'
+               .   '<div class="dp-dash-chips">' . $chips . '</div>'
+               . '</div>';
+}
+
+$total = count($dpDetail);
+$summary = '<span class="dp-ds-item dp-ds-active">' . $nActive . ' active</span>'
+         . '<span class="dp-ds-item dp-ds-sleep">' . $nSleep . ' asleep</span>'
+         . ($nIssue > 0 ? '<span class="dp-ds-item dp-ds-issue">&#9650; ' . $nIssue . ' issue</span>' : '')
+         . ($hottest !== null ? '<span class="dp-ds-item dp-ds-hot">hottest ' . $hottest . '&deg;</span>' : '');
+
+$dpBase = "/usr/local/emhttp/plugins/driveplacement";
+$cssVer = @filemtime("$dpBase/DrivePlacementDash.css") ?: time();
+$jsVer  = @filemtime("$dpBase/DrivePlacementDash.js")  ?: time();
+$detailJson = json_encode($dpDetail, JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_SLASHES);
+
+$tileInner =
+    '<link rel="stylesheet" href="/plugins/driveplacement/DrivePlacementDash.css?v=' . $cssVer . '">'
+  . '<div class="dp-dash' . ($dpDark ? ' dp-dash-dark' : '') . '" id="' . $tileId . '">'
+  .   '<div class="dp-dash-summary">' . $summary
+  .     '<a class="dp-dash-open" href="/Utilities/DrivePlacement">open map &rsaquo;</a>'
+  .   '</div>'
+  .   '<div class="dp-dash-grid">' . $colsHtml . '</div>'
+  . '</div>'
+  . '<script>window.__dpDash=window.__dpDash||{};window.__dpDash["' . $tileId . '"]=' . $detailJson . ';</script>'
+  . '<script src="/plugins/driveplacement/DrivePlacementDash.js?v=' . $jsVer . '"></script>';
+
+$pluginname = "driveplacement";
+$mytiles[$pluginname]['column1'] =
+      '<tbody title="' . _('Physical drive layout map') . '">'
+    . '<tr><td>' . _('Drive Placement') . '</td></tr>'
+    . '<tr><td>' . $tileInner . '</td></tr>'
+    . '</tbody>';
+?>

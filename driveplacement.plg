@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "driveplacement">
 <!ENTITY author "hernandito">
-<!ENTITY version "2026.11.17">
+<!ENTITY version "2026.11.21">
 <!ENTITY github "hernandito/Drive.Placement">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/main/&name;.plg">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
@@ -18,6 +18,9 @@
         min="6.12.0">
 
 <CHANGES>
+###2026.11.21
+- New: Dashboard tile. A compact drive-placement map now appears on the unRAID Dashboard, tinted with the same category colors as the full page. Hover (or tap on touch) a drive to see its details in a floating card; the map stays readable as the tile narrows, shedding detail in steps down to colored squares at the smallest widths. Turn it on or off with the new "Dashboard tile" checkbox on the Drive Placement page.
+
 ###2026.11.20
 - Summarized description for better display.
 
@@ -86,16 +89,21 @@
   The files are then copied into the RAM plugin folder by the script further down.
 -->
 <FILE Name="&cache;/DrivePlacement.page"><URL>&src;/DrivePlacement.page</URL><MD5>2de530a99ad249de2f08cbfaf7271c0e</MD5></FILE>
-<FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL><MD5>547231781263a4056cb8b5132f84a83a</MD5></FILE>
+<FILE Name="&cache;/DrivePlacement.php"><URL>&src;/DrivePlacement.php</URL><MD5>46775b62e43f6195654204c55cee8c1e</MD5></FILE>
 <FILE Name="&cache;/DrivePlacement.css"><URL>&src;/DrivePlacement.css</URL><MD5>066496a992451aee81dea8b5b4d0ea87</MD5></FILE>
 <FILE Name="&cache;/DrivePlacement.js"><URL>&src;/DrivePlacement.js</URL><MD5>10c8ec3f045038e56e8e2754c877a4e2</MD5></FILE>
+<FILE Name="&cache;/DrivePlacementData.php"><URL>&src;/DrivePlacementData.php</URL><MD5>50b08459604492e7767875f9f4912da4</MD5></FILE>
+<FILE Name="&cache;/DrivePlacementDash.page"><URL>&src;/DrivePlacementDash.page</URL><MD5>267c47562be78bbe7b0b2dee854fac2f</MD5></FILE>
+<FILE Name="&cache;/DrivePlacementDash.css"><URL>&src;/DrivePlacementDash.css</URL><MD5>05a8a86a7fd0a76a873544b97d563fa2</MD5></FILE>
+<FILE Name="&cache;/DrivePlacementDash.js"><URL>&src;/DrivePlacementDash.js</URL><MD5>54186d07da7ef5697712cc8335174d87</MD5></FILE>
+<FILE Name="&cache;/set-dash.php"><URL>&src;/set-dash.php</URL><MD5>3cb6953b32eb75a2cfdcd24d45b93856</MD5></FILE>
 <FILE Name="&cache;/save.php"><URL>&src;/save.php</URL><MD5>540fd64556c146176abdbba9170a6811</MD5></FILE>
 <FILE Name="&cache;/identify.php"><URL>&src;/identify.php</URL><MD5>e54a34f1ae0212c4484a14759fbbb8d5</MD5></FILE>
 <FILE Name="&cache;/icons/hdd.png"><URL>&src;/icons/hdd.png</URL><MD5>e2b3693ba5490ebd61266ad4e9dadf93</MD5></FILE>
 <FILE Name="&cache;/icons/ssd.png"><URL>&src;/icons/ssd.png</URL><MD5>0cc29b68945714dabcdbc67d8613a727</MD5></FILE>
 <FILE Name="&cache;/icons/nvme.png"><URL>&src;/icons/nvme.png</URL><MD5>ea2e05a4f10629e7e21eade84c4e663d</MD5></FILE>
 <FILE Name="&cache;/icons/usb.png"><URL>&src;/icons/usb.png</URL><MD5>f0994ba63204e8608338a80ce0cdfe2f</MD5></FILE>
-<FILE Name="&cache;/README.md"><URL>&src;/description.txt</URL><MD5>395a73fcba24ed0c595a09f1a478a14c</MD5></FILE>
+<FILE Name="&cache;/README.md"><URL>&src;/description.txt</URL><MD5>ce384a331436125385a747561cd676b7</MD5></FILE>
 <FILE Name="&cache;/&name;.png"><URL>&src;/icon.png</URL><MD5>b2dc5e9ec88bf634fd4682efa5c6f221</MD5></FILE>
 
 <FILE Run="/bin/bash">
