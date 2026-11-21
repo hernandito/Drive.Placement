@@ -146,18 +146,33 @@ $detailJson = json_encode($dpDetail, JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAP
 $tileInner =
     '<link rel="stylesheet" href="/plugins/driveplacement/DrivePlacementDash.css?v=' . $cssVer . '">'
   . '<div class="dp-dash' . ($dpDark ? ' dp-dash-dark' : '') . '" id="' . $tileId . '">'
-  .   '<div class="dp-dash-summary">' . $summary
-  .     '<a class="dp-dash-open" href="/Utilities/DrivePlacement">open map &rsaquo;</a>'
-  .   '</div>'
   .   '<div class="dp-dash-grid">' . $colsHtml . '</div>'
   . '</div>'
   . '<script>window.__dpDash=window.__dpDash||{};window.__dpDash["' . $tileId . '"]=' . $detailJson . ';</script>'
   . '<script src="/plugins/driveplacement/DrivePlacementDash.js?v=' . $jsVer . '"></script>';
 
+// Header mirrors the native GUI tiles (see DashStats VPN tile): tile-header with an
+// icon, an <h3 class="tile-header-main"> title, the summary as a subtitle, and a cog
+// link to the full page on the right.
 $pluginname = "driveplacement";
 $mytiles[$pluginname]['column1'] =
       '<tbody title="' . _('Physical drive layout map') . '">'
-    . '<tr><td>' . _('Drive Placement') . '</td></tr>'
+    . '<tr><td>'
+    .   '<span class="tile-header">'
+    .     '<span class="tile-header-left gap-2">'
+    .       '<i class="icon-disks f32"></i>'
+    .       '<div class="section">'
+    .         '<h3 class="tile-header-main">' . _('Drive Placement') . '</h3>'
+    .         '<span class="flex flex-row flex-wrap items-center gap-4">' . $summary . '</span><br>'
+    .       '</div>'
+    .     '</span>'
+    .     '<span class="tile-header-right">'
+    .       '<span class="tile-header-right-controls">'
+    .         '<a href="/Utilities/DrivePlacement" title="' . _('Open Drive Placement') . '"><i class="fa fa-fw fa-cog control"></i></a>'
+    .       '</span>'
+    .     '</span>'
+    .   '</span>'
+    . '</td></tr>'
     . '<tr><td>' . $tileInner . '</td></tr>'
     . '</tbody>';
 ?>
